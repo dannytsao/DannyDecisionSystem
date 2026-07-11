@@ -14,6 +14,13 @@
 - Cross-agent validation evidence for Codex and isolated Hermes Agent, with one final Hermes safety retest pending.
 - OpenAI/Codex live validation across technical, promotional, missing-subtitle, and low-relevance YouTube sources.
 - End-of-day checkpoint documenting the sole remaining Milestone 2 exit item and the next-session starting point.
-- A concise DDS Handbook that defines decision governance as a layer inside DannyOS.
+- A concise DDS Handbook that defines the primary project and its decision model.
 - Skill admission rules and a short proposal template to gate future capabilities.
 - An Astro Photography Decision Skill proposal that preserves the old GPT requirements while treating numerical thresholds as unverified Pilot hypotheses.
+
+### Changed
+
+- Established Danny Decision System (DDS) as the primary project identity.
+- Reclassified DannyOS as the inherited foundation and historical work phase rather than the parent of DDS.
+- Replaced the unfinished DannyOS Milestone 3–5 direction with one DDS Sprint roadmap.
+- Added an explicit transition map so inherited assets, historical evidence, and the remaining Hermes test have one clear owner.

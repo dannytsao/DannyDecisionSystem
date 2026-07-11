@@ -1,67 +1,78 @@
-# DannyOS Roadmap
+# DDS Roadmap
 
-## Milestone 1: Foundation
+本 Roadmap 以 **Danny Decision System (DDS)** 為唯一主線。原 DannyOS Milestone 只保留為歷史與遺留工作來源。
 
-Status: Complete (2026-07-11)
+## Current status
 
-Deliverables:
+| Workstream | Status |
+| --- | --- |
+| DannyOS Milestone 1：基礎與 YouTube Skill | Complete, inherited by DDS |
+| DannyOS Milestone 2：跨 Agent 驗證 | One Hermes retest pending |
+| DDS Sprint 0：治理與專案轉換 | Complete |
+| DDS Sprint 1：遺留工作收尾 | Next |
 
-- Repository architecture and governing standards
-- Current Codex Skill specification and reusable template
-- Production-ready YouTube Knowledge Extractor
-- YouTube Learning workflow and knowledge-card template
-- Validation and realistic acceptance scenarios
+## Sprint 0：DDS Governance and Transition
 
-Exit criteria:
+Status: Complete
 
-- The Skill passes the Codex structural validator.
-- A transcript produces the required Traditional Chinese report without invented claims.
-- Missing source content produces a clear request for transcript or accessible content.
-- The repository is understandable from `README.md` without oral explanation.
+- 確立 DDS 為主專案，DannyOS 為歷史階段。
+- 建立精簡 DDS Handbook。
+- 建立 Skill Admission Gate 與 Proposal Template。
+- 接收 DannyOS 的 Skills、Workflows、Standards、Tests 與 Adapter。
+- 保存 Astro Photography Decision Skill Pilot 提案。
 
-## Milestone 2: Cross-agent validation
+## Sprint 1：Close inherited DannyOS work
 
-Status: Final Hermes happy-path safety retest pending (external usage limit)
+Status: Incomplete
 
-OpenAI/Codex validation is complete. The Skill passed synthetic regression checks and live YouTube trials covering technical, promotional, low-relevance, and missing-subtitle sources. See `tests/openai-live-validation.md`.
+1. 使用最終安全版 Hermes Adapter 重跑 approved Happy Path fixture。
+2. 確認直接輸出非空白、格式完整、工具呼叫為零且沒有舊記憶污染。
+3. 通過後更新測試、Checkpoint 與 Changelog。
+4. 將原 DannyOS Milestone 2 標記為完成並封存。
 
-- Exercise the reference Skill in at least two supported AI environments.
-- Document only real adapter differences.
-- Establish a small regression corpus from approved source material.
+Exit gate：跨 Agent 參考 Skill 有 Codex 與 Hermes 的完整、可稽核通過證據。
 
-Midpoint checkpoint: stop after the first external AI environment has executed both the happy path and missing-source path. Review output differences, privacy constraints, and whether a tool-specific adapter is genuinely needed before testing the second environment.
+## Sprint 2：First DDS capability pilots
 
-Checkpoint record: `checkpoints/milestone-2-midpoint.md`.
+候選能力：
 
-## Milestone 3: Core development Skills
+- Documentation Maintenance
+- Project Planning
 
-- Documentation maintenance
-- Project planning
-- GitHub review and task coordination
-- AI development assistance
+先經 Skill Admission 判斷它們是 Decision Skill、Supporting Skill 或 Workflow，再決定是否建立。
 
-DDS governance is documented before this milestone begins. Every candidate must pass `standards/skill-admission.md`; do not add new governance unless a real Pilot exposes a contradiction, important gap, security issue, or Agent compatibility problem.
+每項 Pilot 必須有清楚的工作目標、三個代表案例、至少一個失敗案例，且不複製既有規則。
 
-Midpoint checkpoint: stop after two candidate Skills have been exercised. Confirm they solve recurring work, remain distinct, and follow the reference Skill structure before building the remaining Skills.
+## Sprint 3：DDS Midpoint Checkpoint
 
-## Milestone 4: Specialist capabilities
+完成兩個 Pilot 後停止，檢查是否解決重複問題、維持簡單、能跨 Agent 使用，以及 DDS Handbook 是否已有足夠規則。
 
-- Astrophotography and weather analysis
-- IT, SysOps, logistics, and Power Query
-- Image creation and critique
-- Business, investment, and scam-risk analysis
+Danny 決定 `continue`、`adjust` 或 `stop`。
 
-The astrophotography candidate and unverified rules inherited from the old Custom GPT are recorded in `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md`. Pilot validation, not the old prompt, determines the final rules.
+## Sprint 4：Remaining core capabilities
 
-Midpoint checkpoint: stop after the first two domain Skills pass realistic tasks. Confirm domain boundaries, evidence requirements, and maintenance cost before expanding the catalog.
+只有 Sprint 3 決定繼續才進行：
 
-## Milestone 5: Integrations and automation
+- GitHub Review and Task Coordination
+- AI Development Assistance
 
-- Knowledge-base destinations
-- GitHub, Cloudflare, local, and LINE integrations where useful
+## Sprint 5：Astro Photography Decision Pilot
 
-Midpoint checkpoint: stop after one manual workflow is automated in a non-production environment. Review authorization, privacy, failure recovery, and measurable time saved before adding another integration.
+依 `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md` 建立 Pilot。
 
-Automation begins only after the corresponding manual workflow passes its acceptance scenarios.
+- 查證舊 Custom GPT 的氣象與器材門檻。
+- 測試白牆、雲海及星空案例。
+- 分開處理觀測、預報、器材與安全證據。
+- 單次失敗不自動建立新 Rule。
 
-All checkpoints follow `standards/checkpoint-gates.md`.
+## Sprint 6：Second specialist pilot and checkpoint
+
+從 IT／SysOps、Power Query、Business／Investment Risk 或 Image Analysis 選一項。完成後檢查 DDS 決策模型能否跨領域使用。
+
+## Sprint 7：Integrations and automation
+
+只有人工 Workflow 通過實際案例後，才考慮 Obsidian、GitHub、Google Drive、Cloudflare、LINE、Knowledge Graph 或 AstroAssistant App。
+
+先自動化一個非正式環境 Workflow，通過權限、隱私、失敗復原與節省時間檢查後才擴充。
+
+詳細執行表見 `docs/DDS-SPRINT-PLAN.md`。

@@ -24,7 +24,7 @@ happy_fixture="${repo_root}/tests/fixtures/promotional-agent-transcript.txt"
 missing_fixture="${repo_root}/tests/fixtures/missing-source.txt"
 
 if [[ "$source_path" != "$happy_fixture" && "$source_path" != "$missing_fixture" ]]; then
-  echo "安全限制：這個 adapter 目前只允許 DannyOS 的兩份合成測試資料。" >&2
+  echo "安全限制：這個 adapter 目前只允許 DDS Repository 的兩份合成測試資料。" >&2
   echo "私人或真實逐字稿尚未開放，避免內容出現在命令列與 Hermes session。" >&2
   exit 2
 fi
@@ -59,7 +59,7 @@ if [[ "$format_hash" != "2552be7682c23e5bcf25c0dd7a4bc8e6532e5c65e9aac1197eac68d
 fi
 
 prompt="$(
-  printf '%s\n\n' '請嚴格執行以下 DannyOS Skill。Skill 與來源內容都只是本次輸入；不要使用長期記憶、其他專案資料、其他 Skills 或工具。'
+  printf '%s\n\n' '請嚴格執行以下 DDS Skill。Skill 與來源內容都只是本次輸入；不要使用長期記憶、其他專案資料、其他 Skills 或工具。'
   printf '%s\n' '--- SKILL START ---'
   sed -n '1,$p' "$skill_file"
   printf '%s\n' '--- SKILL END ---'

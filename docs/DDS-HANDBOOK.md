@@ -1,13 +1,14 @@
 # DDS Handbook
 
-DDS 是 **Danny Decision System**。它不是新的 Repository，也不是另一套 Agent。
+DDS 是 **Danny Decision System**，也是本 Repository 的主專案。它不是另一套 Agent。
 
-DDS 是 DannyOS 裡的決策治理方式：當一項能力需要根據證據、風險和 Danny 的條件做判斷時，使用同一套簡單流程。
+DDS 接收原 DannyOS 建立的 Skill、Workflow、測試與標準，並將它們導向同一個目的：根據證據、風險和 Danny 的條件，建立可重複使用的決策能力。
 
 ```text
-DannyOS
+DDS
+├── Decision governance
 ├── Skills、Workflows、Knowledge、Adapters
-└── DDS：管理其中的決策型能力
+└── Inherited DannyOS assets and history
 ```
 
 ## 五個原則

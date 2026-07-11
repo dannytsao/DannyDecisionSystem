@@ -1,6 +1,6 @@
 # Astro Photography Decision Skill Proposal
 
-Status: Candidate for Milestone 4 pilot
+Status: Candidate for DDS Sprint 5 pilot
 
 ## Problem
 
@@ -107,4 +107,4 @@ Sources and freshness:
 - Skill 負責決策，不負責建立天氣 API 或 App UI。
 - Weather、satellite、tide 與 astronomy 擷取可成為 Supporting Skills 或工具。
 - AstroAssistant App 是未來介面；只有 Skill 經真實案例驗證後才考慮。
-- 本提案不改變目前 Milestone 2 的完成條件，也不提前開始 Milestone 4。
+- 本提案不改變 DDS Sprint 1 的 DannyOS 遺留工作收尾條件，也不提前開始 Sprint 5。

@@ -1,6 +1,6 @@
 # Milestone Checkpoint Gates
 
-Every DannyOS milestone must stop once near its midpoint before the remaining work begins. The checkpoint is a decision gate, not a status update.
+Every DDS Sprint with a declared midpoint must stop before the remaining work begins. The checkpoint is a decision gate, not a status update. Historical DannyOS milestone records remain valid evidence.
 
 ## Required checkpoint record
 

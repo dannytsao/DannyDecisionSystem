@@ -1,6 +1,6 @@
 # Hermes Adapter
 
-這個 adapter 讓 Hermes Agent 在乾淨、可重複的環境中測試 DannyOS 的 YouTube Knowledge Extractor。目前是評估工具，不是一般私人逐字稿處理工具。
+這個 adapter 讓 Hermes Agent 在乾淨、可重複的環境中測試 DDS 接收的 YouTube Knowledge Extractor。目前是 DannyOS 階段留下的評估工具，不是一般私人逐字稿處理工具。
 
 ## 為什麼需要 adapter
 
@@ -23,7 +23,7 @@ hermes profile create dannyos-clean --no-alias
 cp ~/.hermes/.env ~/.hermes/profiles/dannyos-clean/.env
 ```
 
-只複製 `.env` 是為了沿用模型連線設定；不要使用 `--clone`，也不要複製 `MEMORY.md`、`USER.md` 或 `SOUL.md`。
+只複製 `.env` 是為了沿用模型連線設定；不要使用 `--clone`，也不要複製 `MEMORY.md`、`USER.md` 或 `SOUL.md`。`dannyos-clean` 是已測試的歷史 profile 名稱，暫時保留到遺留測試完成。
 
 ## 使用方式
 

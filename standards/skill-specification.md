@@ -1,6 +1,6 @@
-# DannyOS Skill Specification
+# DDS Skill Specification
 
-DannyOS Skills follow the current Codex progressive-disclosure model.
+DDS Skills follow the current Codex progressive-disclosure model.
 
 ## Structure
 
@@ -14,7 +14,7 @@ skill-name/
 
 Use `scripts/` only for deterministic repeated operations and `assets/` only for output assets. Do not add per-Skill README, changelog, installation, checklist, or test documents. Keep essential execution rules in `SKILL.md`, runtime detail in `references/`, and project history or tests at the repository root.
 
-Initialize every new Skill with the current Codex `skill-creator` `init_skill.py` script. Use the DannyOS template to shape the generated instructions, never to bypass initialization.
+Initialize every new Skill with the current Codex `skill-creator` `init_skill.py` script. Use the DDS template to shape the generated instructions, never to bypass initialization.
 
 ## `SKILL.md`
 
