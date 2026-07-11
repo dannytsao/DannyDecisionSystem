@@ -26,6 +26,8 @@ Use $youtube-knowledge-extractor to analyze this transcript: ...
 
 Follow `workflows/youtube-learning/WORKFLOW.md` for the complete capture-to-knowledge process.
 
+Hermes Agent 必須透過 `adapters/hermes/` 的隔離方式執行，避免長期記憶混入影片分析。
+
 ## Creating a Skill
 
 1. Read `standards/skill-specification.md`.

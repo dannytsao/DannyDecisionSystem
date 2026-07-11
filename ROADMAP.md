@@ -21,11 +21,15 @@ Exit criteria:
 
 ## Milestone 2: Cross-agent validation
 
+Status: Final Hermes happy-path safety retest pending (external usage limit)
+
 - Exercise the reference Skill in at least two supported AI environments.
 - Document only real adapter differences.
 - Establish a small regression corpus from approved source material.
 
 Midpoint checkpoint: stop after the first external AI environment has executed both the happy path and missing-source path. Review output differences, privacy constraints, and whether a tool-specific adapter is genuinely needed before testing the second environment.
+
+Checkpoint record: `checkpoints/milestone-2-midpoint.md`.
 
 ## Milestone 3: Core development Skills
 

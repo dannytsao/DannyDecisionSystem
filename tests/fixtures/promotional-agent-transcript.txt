@@ -1,0 +1,1 @@
+The speaker claims a new AI agent is ten times faster than every competitor, but provides no benchmark. Most of the video promotes a paid course. The only concrete advice is to define acceptance criteria before asking an agent to code, keep tasks small, and review changes before deployment.

@@ -54,6 +54,7 @@ After confirming sufficient source content, read [OUTPUT_FORMAT.md](references/O
 - Remove empty interest categories and fabricated action items.
 - Mark claims requiring current verification without pretending they were verified.
 - Ensure the rating and watch, save, and share recommendations match the evidence.
+- Keep the knowledge-card decision consistent: if `【值得存成知識卡】` creates a card, `是否值得建立知識卡` must be `是`; if it declines a card, the final decision must be `否`.
 - Present actions and AI-agent work as recommendations only; require separate user authorization before external writes, installations, authentication, or data transfer.
 
 # Failure handling
