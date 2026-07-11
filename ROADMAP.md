@@ -23,6 +23,8 @@ Exit criteria:
 
 Status: Final Hermes happy-path safety retest pending (external usage limit)
 
+OpenAI/Codex validation is complete. The Skill passed synthetic regression checks and live YouTube trials covering technical, promotional, low-relevance, and missing-subtitle sources. See `tests/openai-live-validation.md`.
+
 - Exercise the reference Skill in at least two supported AI environments.
 - Document only real adapter differences.
 - Establish a small regression corpus from approved source material.
