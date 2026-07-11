@@ -1,0 +1,4 @@
+interface:
+  display_name: "YouTube Knowledge Extractor"
+  short_description: "Extract useful, actionable knowledge from video content"
+  default_prompt: "Use $youtube-knowledge-extractor to turn this video or transcript into an actionable Traditional Chinese learning report."
