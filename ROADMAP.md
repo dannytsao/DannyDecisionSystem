@@ -40,6 +40,8 @@ Checkpoint record: `checkpoints/milestone-2-midpoint.md`.
 - GitHub review and task coordination
 - AI development assistance
 
+DDS governance is documented before this milestone begins. Every candidate must pass `standards/skill-admission.md`; do not add new governance unless a real Pilot exposes a contradiction, important gap, security issue, or Agent compatibility problem.
+
 Midpoint checkpoint: stop after two candidate Skills have been exercised. Confirm they solve recurring work, remain distinct, and follow the reference Skill structure before building the remaining Skills.
 
 ## Milestone 4: Specialist capabilities
@@ -48,6 +50,8 @@ Midpoint checkpoint: stop after two candidate Skills have been exercised. Confir
 - IT, SysOps, logistics, and Power Query
 - Image creation and critique
 - Business, investment, and scam-risk analysis
+
+The astrophotography candidate and unverified rules inherited from the old Custom GPT are recorded in `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md`. Pilot validation, not the old prompt, determines the final rules.
 
 Midpoint checkpoint: stop after the first two domain Skills pass realistic tasks. Confirm domain boundaries, evidence requirements, and maintenance cost before expanding the catalog.
 

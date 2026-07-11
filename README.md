@@ -8,6 +8,7 @@ DannyOS is Danny's version-controlled operating system for AI collaborators. It 
 | --- | --- |
 | `skills/` | Reusable capabilities Codex can discover and execute |
 | `workflows/` | End-to-end procedures that may combine Skills |
+| `docs/` | Human-readable architecture and decision guidance |
 | `standards/` | Repository-wide design and maintenance rules |
 | `templates/` | Copyable starting points for new artifacts |
 | `knowledge/` | Verified, durable knowledge created by workflows |
@@ -15,6 +16,12 @@ DannyOS is Danny's version-controlled operating system for AI collaborators. It 
 | `checkpoints/` | Midpoint decision records for active milestones |
 
 Skills contain execution knowledge. Workflows decide when and how to combine it. Tool adapters should be added only when a tool genuinely requires different loading instructions.
+
+## Decision governance
+
+DDS (Danny Decision System) is the decision-governance layer inside DannyOS, not a separate repository or product. Read `docs/DDS-HANDBOOK.md` for the concise decision model and `standards/skill-admission.md` before proposing a new Skill.
+
+The first specialist candidate is documented in `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md`. It remains a Milestone 4 proposal; its old GPT thresholds are hypotheses until verified through sources and real cases.
 
 ## First capability
 
@@ -31,10 +38,11 @@ Hermes Agent 必須透過 `adapters/hermes/` 的隔離方式執行，避免長�
 ## Creating a Skill
 
 1. Read `standards/skill-specification.md`.
-2. Run the Codex `skill-creator` `init_skill.py` script to create the lowercase hyphenated folder under `skills/` and generate `agents/openai.yaml`.
-3. Use `templates/skill-template.md` as a content checklist, not as a replacement for initialization.
-4. Add only resources needed at runtime.
-5. Run the validator bundled with the installed Codex `skill-creator`, for example `python3 "$CODEX_HOME/skills/.system/skill-creator/scripts/quick_validate.py" skills/<skill-name>`, then exercise the Skill with realistic input.
+2. Complete `templates/skill-proposal.md` and pass `standards/skill-admission.md`.
+3. Run the Codex `skill-creator` `init_skill.py` script to create the lowercase hyphenated folder under `skills/` and generate `agents/openai.yaml`.
+4. Use `templates/skill-template.md` as a content checklist, not as a replacement for initialization.
+5. Add only resources needed at runtime.
+6. Run the validator bundled with the installed Codex `skill-creator`, for example `python3 "$CODEX_HOME/skills/.system/skill-creator/scripts/quick_validate.py" skills/<skill-name>`, then exercise the Skill with realistic input.
 
 ## Checkpoint policy
 
