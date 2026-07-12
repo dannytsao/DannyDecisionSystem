@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review GitHub Change"
+  short_description: "Decide whether a GitHub change is ready safely"
+  default_prompt: "Use $review-github-change to assess whether this repository change is ready for PR, merge, or deployment."

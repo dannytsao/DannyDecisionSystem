@@ -12,7 +12,8 @@
 | DDS Sprint 1：遺留工作收尾 | Complete |
 | DDS Sprint 2：首批能力 Pilot | Complete |
 | DDS Sprint 3：Midpoint Checkpoint | Complete; decision: continue |
-| DDS Sprint 4：Remaining core capabilities | Next; not started |
+| DDS Sprint 4：Remaining core capabilities | Complete |
+| DDS Sprint 5：Astro Photography Decision Pilot | Next; not started |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -68,14 +69,22 @@ Decision: `continue`。完整紀錄見 `checkpoints/sprint-3-checkpoint.md`。
 
 ## Sprint 4：Remaining core capabilities
 
-Status: Not started
+Status: Complete
 
 只有 Sprint 3 決定繼續才進行：
 
 - GitHub Review and Task Coordination
 - AI Development Assistance
 
+完成成果：
+
+- GitHub 範圍收斂為 `review-github-change` Decision Skill，通過五個案例與獨立前向測試。
+- Task Coordination 繼續使用 `project-planning`。
+- AI Development Assistance 因與現有規劃、程式、Review、Git 與 CI 能力重疊，不建立新 Skill。
+
 ## Sprint 5：Astro Photography Decision Pilot
+
+Status: Not started
 
 依 `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md` 建立 Pilot。
 

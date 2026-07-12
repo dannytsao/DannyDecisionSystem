@@ -21,6 +21,9 @@
 - Admission proposals, representative cases, and independent forward-test evidence for both Sprint 2 Pilots.
 - DDS Sprint 2 completion record.
 - DDS Sprint 3 checkpoint with Danny's `continue` decision.
+- GitHub Change Review Decision Skill Pilot with five readiness and safety cases.
+- AI Development Assistance Admission decision, merged into existing planning and execution capabilities.
+- DDS Sprint 4 completion record.
 
 ### Changed
 
@@ -32,3 +35,4 @@
 - Closed DDS Sprint 1 and archived the inherited DannyOS Milestone 2.
 - Completed DDS Sprint 2 without expanding the Handbook or starting later-roadmap work.
 - Added the DDS Sprint checkpoint filename rule while preserving historical DannyOS milestone names.
+- Completed DDS Sprint 4 without duplicating task planning or general coding capabilities.
