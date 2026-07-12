@@ -1,6 +1,6 @@
 # Milestone 2 Midpoint Checkpoint
 
-Status: Adjustment implemented — final happy-path retest pending
+Status: Complete
 
 Recommendation: `adjust`
 
@@ -71,22 +71,23 @@ Decision: `adjust`.
 
 ## Adjustment result
 
-Status: Implemented; final happy-path runtime retest pending.
+Status: Implemented and verified.
 
 - `dannyos-clean` 空白 profile 已證實不含 PersonalKM 或 Resolver Layer 舊記憶。
 - adapter 會載入完整 Skill 與輸出格式、關閉個人規則，並只保留 `clarify` 提問工具。
 - missing-source path 已用最終安全版本通過。
-- happy path 的行為版本已通過；加入最終安全收窄後的重跑因外部用量上限暫時未完成。
+- happy path 已於 2026-07-12 使用最終安全版本重跑通過。
 - 核心 Skill 新增知識卡前後一致性規則。
 - one-shot stdout 空白時，adapter 會安全地判定失敗，不會誤拿其他 session 的答案。
 
-Checkpoint decision 已執行完成，可以進入 Milestone 2 的第二個 AI 環境測試。
+Checkpoint decision 已執行完成。
 
 ## Final outcome after checkpoint
 
-Status: Pending one final happy-path runtime retest.
+Status: Complete.
 
-- Codex 已通過兩條路徑；Hermes 最終安全版本已通過 missing-source，happy path 等待外部用量恢復後重跑。
+- Codex 已通過兩條路徑；Hermes 最終安全版本已通過 missing-source 與 happy path。
+- 最終 happy-path session 為 `20260712_163710_2832ac`：直接輸出非空白、輸出 1605 tokens、工具呼叫數為 0，且沒有 PersonalKM 或 Resolver Layer 污染。
 - 差異記錄於 `tests/cross-agent-comparison.md`。
 - 合成 regression corpus 位於 `tests/fixtures/`，並已獲使用者同意用於 Anthropic 測試。
 - Claude Code 因本機尚未登入、API 使用量為 0，未列入有效測試環境，也未保留未驗證 adapter。

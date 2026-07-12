@@ -1,6 +1,6 @@
 # Codex 與 Hermes 跨 Agent 比較
 
-日期：2026-07-11
+日期：2026-07-12
 
 ## 測試環境
 
@@ -28,6 +28,7 @@
 - Codex 實際範例：`examples/promotional-agent-workflow.md`、`examples/missing-source.md`
 - Hermes 去識別化輸出：`tests/expected/hermes-promotional-output.md`、`tests/expected/hermes-missing-source-output.md`
 - 自動檢查：`tests/validate-regression.sh`
+- 最終 Hermes session：`20260712_163710_2832ac`（直接輸出非空白、`tool_call_count: 0`、`output_tokens: 1605`）
 
 ## 真正需要的 adapter 差異
 
@@ -47,4 +48,4 @@ Claude Code CLI 尚未登入，隔離測試回報 API 使用量為 0，因此沒
 
 ## 結論
 
-YouTube Knowledge Extractor 已在 Codex 與隔離後的 Hermes Agent 中通過相同核心行為。Hermes 最終安全版本的 missing-source 已通過；happy path 尚需在外部用量恢復後再跑一次，才能正式封存 Milestone 2。核心 Skill 維持共用；只有 Hermes 的載入與隔離方式需要 adapter。
+YouTube Knowledge Extractor 已在 Codex 與隔離後的 Hermes Agent 中通過相同核心行為。Hermes 最終安全版本的 happy path 與 missing-source 均已通過，DannyOS Milestone 2 可正式封存。核心 Skill 維持共用；只有 Hermes 的載入與隔離方式需要 adapter。

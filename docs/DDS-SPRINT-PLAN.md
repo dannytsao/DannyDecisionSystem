@@ -3,7 +3,7 @@
 | Sprint | Outcome | Stop condition |
 | ---: | --- | --- |
 | 0 | DDS 成為主專案並接收 DannyOS 資產 | 文件、Roadmap 與治理不再主從矛盾 |
-| 1 | 關閉 Hermes 遺留測試 | 最終安全 Happy Path 通過並封存舊 Milestone 2 |
+| 1 | 關閉 Hermes 遺留測試（完成） | 最終安全 Happy Path 通過並封存舊 Milestone 2 |
 | 2 | 建立兩個 DDS capability pilots | 每項通過 Admission 與三個案例 |
 | 3 | Midpoint review | Danny 決定 continue、adjust 或 stop |
 | 4 | 完成獲准的核心能力 | 核心能力通過測試或被明確取消 |
@@ -21,4 +21,4 @@
 
 ## Current next action
 
-Sprint 1：執行 Hermes 最終安全版 Happy Path 重測。
+Sprint 2：先對 Documentation Maintenance 與 Project Planning 執行 Skill Admission，再決定 Pilot 類型與順序。

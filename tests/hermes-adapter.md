@@ -1,6 +1,6 @@
 # Hermes Adapter 驗證紀錄
 
-日期：2026-07-11
+日期：2026-07-12
 
 ## 為什麼需要隔離
 
@@ -12,9 +12,18 @@
 
 輸入：`tests/fixtures/promotional-agent-transcript.txt`
 
-結果：行為 PASS，最終安全版本尚待一次 runtime 重跑。
+結果：PASS。最終安全版本已完成 runtime 重跑。
 
-加入 `clarify` 與完整 hash 鎖定前的隔離 adapter 已使用精確 session ID 核對；Hermes 紀錄顯示 `tool_call_count: 0`、`output_tokens: 1881`，模型正常完成回答。最終版本只進一步收窄權限並增加內容鎖定，但 happy path 重跑受到外部用量上限阻擋，尚未完成。
+本次可稽核紀錄：
+
+- Hermes session：`20260712_163710_2832ac`
+- 模型：`claude-sonnet-4-6`
+- 直接輸出：非空白
+- 輸出 tokens：1605
+- 工具呼叫：0
+- 工作目錄：`/Users/dannytsao/Documents/DannyDecisionSystem`
+
+最終 adapter 已使用完整 hash 鎖定、乾淨 profile、safe mode、個人規則停用及僅限 `clarify` 的工具權限。Hermes session 紀錄顯示 `tool_call_count: 0`，模型正常完成回答。
 
 - 完整輸出十個指定區塊。
 - 使用繁體中文。

@@ -7,9 +7,10 @@
 | Workstream | Status |
 | --- | --- |
 | DannyOS Milestone 1：基礎與 YouTube Skill | Complete, inherited by DDS |
-| DannyOS Milestone 2：跨 Agent 驗證 | One Hermes retest pending |
+| DannyOS Milestone 2：跨 Agent 驗證 | Complete, archived |
 | DDS Sprint 0：治理與專案轉換 | Complete |
-| DDS Sprint 1：遺留工作收尾 | Next |
+| DDS Sprint 1：遺留工作收尾 | Complete |
+| DDS Sprint 2：首批能力 Pilot | Next |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -23,7 +24,7 @@ Status: Complete
 
 ## Sprint 1：Close inherited DannyOS work
 
-Status: Incomplete
+Status: Complete
 
 1. 使用最終安全版 Hermes Adapter 重跑 approved Happy Path fixture。
 2. 確認直接輸出非空白、格式完整、工具呼叫為零且沒有舊記憶污染。
@@ -31,6 +32,8 @@ Status: Incomplete
 4. 將原 DannyOS Milestone 2 標記為完成並封存。
 
 Exit gate：跨 Agent 參考 Skill 有 Codex 與 Hermes 的完整、可稽核通過證據。
+
+完成證據：Hermes 最終 session `20260712_163710_2832ac` 直接回傳完整繁體中文格式，工具呼叫數為 0，且沒有舊記憶污染。
 
 ## Sprint 2：First DDS capability pilots
 

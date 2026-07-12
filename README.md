@@ -13,7 +13,7 @@ DDS 是 Danny 的版本控制決策系統。它保存可重複使用的決策能
 ```text
 DDS（主專案）
 ├── 接收 DannyOS 已完成的基礎資產
-├── 收尾 DannyOS 尚未完成的 Hermes 測試
+├── 保存已完成的 DannyOS／Hermes 歷史證據
 └── 以決策能力為核心繼續發展
 ```
 
@@ -62,7 +62,8 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 ## 目前狀態
 
 - DDS Sprint 0：治理與轉換，完成。
-- DDS Sprint 1：DannyOS 遺留工作收尾，剩 Hermes 最終安全版 Happy Path 重測。
+- DDS Sprint 1：DannyOS 遺留工作收尾，完成。
+- DDS Sprint 2：首批 DDS capability pilots，下一步。
 - Astro Photography：已保存為後續 Decision Skill Pilot 提案，尚未開始實作。
 
 執行順序以 `ROADMAP.md` 和 `docs/DDS-SPRINT-PLAN.md` 為準。
