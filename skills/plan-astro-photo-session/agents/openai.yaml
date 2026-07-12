@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Astro Photo Session"
+  short_description: "Decide whether an astro photo trip should proceed"
+  default_prompt: "Use $plan-astro-photo-session to decide whether this Taiwan astrophotography session should be Go, Conditional Go, No-Go, or Defer."

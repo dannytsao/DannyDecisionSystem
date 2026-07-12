@@ -66,8 +66,8 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 - DDS Sprint 2：Documentation Maintenance 與 Project Planning Pilots，完成。
 - DDS Sprint 3：Midpoint Checkpoint，完成；Danny 決定 `continue`。
 - DDS Sprint 4：GitHub readiness Pilot 與 AI Development Admission，完成。
-- DDS Sprint 5：Astro Photography Decision Pilot，下一步但尚未開始。
-- Astro Photography：已保存為後續 Decision Skill Pilot 提案，尚未開始實作。
+- DDS Sprint 5：Astro Photography Decision Pilot，進行中；等待三次真實拍攝結果校準。
+- Astro Photography：Pilot Skill 已建立並通過合成案例，尚待三次真實拍攝結果校準。
 
 執行順序以 `ROADMAP.md` 和 `docs/DDS-SPRINT-PLAN.md` 為準。
 
@@ -77,6 +77,7 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 - `skills/documentation-maintenance/`
 - `skills/project-planning/`
 - `skills/review-github-change/`
+- `skills/plan-astro-photo-session/`
 
 ## 建立新 Skill
 

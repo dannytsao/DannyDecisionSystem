@@ -1,6 +1,8 @@
 # Astro Photography Decision Skill Proposal
 
-Status: Candidate for DDS Sprint 5 pilot
+Status: Accepted for DDS Sprint 5 Pilot
+
+Scope approval: Danny instructed Codex to start Sprint 5 on 2026-07-12.
 
 ## Problem
 
@@ -67,6 +69,8 @@ Decision Skill。
 
 在 Pilot 通過前，不得把這些數值描述為科學定律或成功保證。
 
+查證結果與正式來源已整理於 `skills/plan-astro-photo-session/references/EVIDENCE.md`。舊規則中的固定預報信心百分比、5 km 白牆、50% 月照濾鏡及 30 m/s 噴流震動門檻不納入正式規則。
+
 ## Equipment Context
 
 已知候選器材：
@@ -107,4 +111,4 @@ Sources and freshness:
 - Skill 負責決策，不負責建立天氣 API 或 App UI。
 - Weather、satellite、tide 與 astronomy 擷取可成為 Supporting Skills 或工具。
 - AstroAssistant App 是未來介面；只有 Skill 經真實案例驗證後才考慮。
-- 本提案不改變 DDS Sprint 1 的 DannyOS 遺留工作收尾條件，也不提前開始 Sprint 5。
+- 本 Pilot 不建立天氣 API、App UI 或自動化，也不提前開始 Sprint 6。

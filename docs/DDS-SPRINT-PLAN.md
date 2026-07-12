@@ -21,4 +21,4 @@
 
 ## Current next action
 
-Stop after Sprint 4. Wait for Danny to explicitly begin Sprint 5 Astro Photography Pilot.
+Continue Sprint 5 only when a real cloud/fog, night-sky, or equipment/safety session is available. Record prediction and actual outcome; do not start Sprint 6.

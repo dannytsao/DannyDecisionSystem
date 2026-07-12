@@ -24,6 +24,8 @@
 - GitHub Change Review Decision Skill Pilot with five readiness and safety cases.
 - AI Development Assistance Admission decision, merged into existing planning and execution capabilities.
 - DDS Sprint 4 completion record.
+- Astro Photography Decision Pilot with official evidence review and six synthetic behavior cases.
+- Sprint 5 checkpoint that keeps real-session calibration as an open exit gate.
 
 ### Changed
 
@@ -36,3 +38,4 @@
 - Completed DDS Sprint 2 without expanding the Handbook or starting later-roadmap work.
 - Added the DDS Sprint checkpoint filename rule while preserving historical DannyOS milestone names.
 - Completed DDS Sprint 4 without duplicating task planning or general coding capabilities.
+- Rejected unsupported universal astro thresholds instead of carrying them forward from the old GPT.

@@ -13,7 +13,7 @@
 | DDS Sprint 2：首批能力 Pilot | Complete |
 | DDS Sprint 3：Midpoint Checkpoint | Complete; decision: continue |
 | DDS Sprint 4：Remaining core capabilities | Complete |
-| DDS Sprint 5：Astro Photography Decision Pilot | Next; not started |
+| DDS Sprint 5：Astro Photography Decision Pilot | In progress; real outcomes pending |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -84,7 +84,7 @@ Status: Complete
 
 ## Sprint 5：Astro Photography Decision Pilot
 
-Status: Not started
+Status: In progress
 
 依 `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md` 建立 Pilot。
 
@@ -92,6 +92,8 @@ Status: Not started
 - 測試白牆、雲海及星空案例。
 - 分開處理觀測、預報、器材與安全證據。
 - 單次失敗不自動建立新 Rule。
+
+目前成果：Skill、官方規則查證及六個合成行為案例已通過。尚缺三次真實拍攝的預測／結果校準，因此 Sprint 5 不標記為完成。
 
 ## Sprint 6：Second specialist pilot and checkpoint
 
