@@ -4,7 +4,9 @@ Every DDS Sprint with a declared midpoint must stop before the remaining work be
 
 ## Required checkpoint record
 
-Create `checkpoints/milestone-<number>-midpoint.md` containing:
+For DDS, create `checkpoints/sprint-<number>-checkpoint.md`. Historical DannyOS records may keep `checkpoints/milestone-<number>-midpoint.md`.
+
+The record contains:
 
 1. Original milestone outcome and exit criteria.
 2. Work completed, with links to actual artifacts.
@@ -14,7 +16,7 @@ Create `checkpoints/milestone-<number>-midpoint.md` containing:
 6. Recommendation: `continue`, `adjust`, or `stop`.
 7. User decision and any approved correction.
 
-Do not begin the second half of a milestone until the user reviews this record and explicitly chooses a direction.
+Do not begin the next Sprint until the user reviews this record and explicitly chooses a direction.
 
 ## Pass conditions
 

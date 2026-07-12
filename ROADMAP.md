@@ -11,7 +11,8 @@
 | DDS Sprint 0：治理與專案轉換 | Complete |
 | DDS Sprint 1：遺留工作收尾 | Complete |
 | DDS Sprint 2：首批能力 Pilot | Complete |
-| DDS Sprint 3：Midpoint Checkpoint | Next; not started |
+| DDS Sprint 3：Midpoint Checkpoint | Complete; decision: continue |
+| DDS Sprint 4：Remaining core capabilities | Next; not started |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -57,13 +58,17 @@ Status: Complete
 
 ## Sprint 3：DDS Midpoint Checkpoint
 
-Status: Not started
+Status: Complete
 
 完成兩個 Pilot 後停止，檢查是否解決重複問題、維持簡單、能跨 Agent 使用，以及 DDS Handbook 是否已有足夠規則。
 
 Danny 決定 `continue`、`adjust` 或 `stop`。
 
+Decision: `continue`。完整紀錄見 `checkpoints/sprint-3-checkpoint.md`。
+
 ## Sprint 4：Remaining core capabilities
+
+Status: Not started
 
 只有 Sprint 3 決定繼續才進行：
 

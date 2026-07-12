@@ -20,6 +20,7 @@
 - Documentation Maintenance and Project Planning Decision Skill Pilots.
 - Admission proposals, representative cases, and independent forward-test evidence for both Sprint 2 Pilots.
 - DDS Sprint 2 completion record.
+- DDS Sprint 3 checkpoint with Danny's `continue` decision.
 
 ### Changed
 
@@ -30,3 +31,4 @@
 - Completed the final hardened Hermes happy-path retest with a non-empty direct response, zero tool calls, full format compliance, and no persistent-memory contamination.
 - Closed DDS Sprint 1 and archived the inherited DannyOS Milestone 2.
 - Completed DDS Sprint 2 without expanding the Handbook or starting later-roadmap work.
+- Added the DDS Sprint checkpoint filename rule while preserving historical DannyOS milestone names.
