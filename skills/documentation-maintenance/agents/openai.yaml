@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Maintenance"
+  short_description: "Review and govern repository documentation safely"
+  default_prompt: "Use $documentation-maintenance to decide which repository documents should be updated, kept, merged, or archived."

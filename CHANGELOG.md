@@ -17,6 +17,9 @@
 - A concise DDS Handbook that defines the primary project and its decision model.
 - Skill admission rules and a short proposal template to gate future capabilities.
 - An Astro Photography Decision Skill proposal that preserves the old GPT requirements while treating numerical thresholds as unverified Pilot hypotheses.
+- Documentation Maintenance and Project Planning Decision Skill Pilots.
+- Admission proposals, representative cases, and independent forward-test evidence for both Sprint 2 Pilots.
+- DDS Sprint 2 completion record.
 
 ### Changed
 
@@ -26,3 +29,4 @@
 - Added an explicit transition map so inherited assets, historical evidence, and the remaining Hermes test have one clear owner.
 - Completed the final hardened Hermes happy-path retest with a non-empty direct response, zero tool calls, full format compliance, and no persistent-memory contamination.
 - Closed DDS Sprint 1 and archived the inherited DannyOS Milestone 2.
+- Completed DDS Sprint 2 without expanding the Handbook or starting later-roadmap work.

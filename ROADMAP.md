@@ -10,7 +10,8 @@
 | DannyOS Milestone 2：跨 Agent 驗證 | Complete, archived |
 | DDS Sprint 0：治理與專案轉換 | Complete |
 | DDS Sprint 1：遺留工作收尾 | Complete |
-| DDS Sprint 2：首批能力 Pilot | Next |
+| DDS Sprint 2：首批能力 Pilot | Complete |
+| DDS Sprint 3：Midpoint Checkpoint | Next; not started |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -37,6 +38,8 @@ Exit gate：跨 Agent 參考 Skill 有 Codex 與 Hermes 的完整、可稽核通
 
 ## Sprint 2：First DDS capability pilots
 
+Status: Complete
+
 候選能力：
 
 - Documentation Maintenance
@@ -46,7 +49,15 @@ Exit gate：跨 Agent 參考 Skill 有 Codex 與 Hermes 的完整、可稽核通
 
 每項 Pilot 必須有清楚的工作目標、三個代表案例、至少一個失敗案例，且不複製既有規則。
 
+完成成果：
+
+- `documentation-maintenance` Decision Skill Pilot
+- `project-planning` Decision Skill Pilot
+- 兩者皆通過官方結構驗證、三個案例及獨立 Agent 前向測試
+
 ## Sprint 3：DDS Midpoint Checkpoint
+
+Status: Not started
 
 完成兩個 Pilot 後停止，檢查是否解決重複問題、維持簡單、能跨 Agent 使用，以及 DDS Handbook 是否已有足夠規則。
 

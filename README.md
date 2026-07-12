@@ -63,10 +63,17 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 
 - DDS Sprint 0：治理與轉換，完成。
 - DDS Sprint 1：DannyOS 遺留工作收尾，完成。
-- DDS Sprint 2：首批 DDS capability pilots，下一步。
+- DDS Sprint 2：Documentation Maintenance 與 Project Planning Pilots，完成。
+- DDS Sprint 3：Midpoint Checkpoint，下一步但尚未開始。
 - Astro Photography：已保存為後續 Decision Skill Pilot 提案，尚未開始實作。
 
 執行順序以 `ROADMAP.md` 和 `docs/DDS-SPRINT-PLAN.md` 為準。
+
+目前的 DDS Skills：
+
+- `skills/youtube-knowledge-extractor/`
+- `skills/documentation-maintenance/`
+- `skills/project-planning/`
 
 ## 建立新 Skill
 
