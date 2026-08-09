@@ -31,4 +31,4 @@ Checked: 2026-07-12
 
 ## Calibration rule
 
-Record predictions and actual outcomes, but promote a new local rule only after repeated cases or one high-cost event with clear causal evidence.
+When reliable outcome evidence exists, compare it with the prediction. Evidence may include an on-site report, later observation, public image, equipment log or real photo. No outcome evidence is not a failure. Promote a new local rule only after repeated independent cases. A single case may trigger review, but must not promote a Rule.

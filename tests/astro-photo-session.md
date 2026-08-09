@@ -26,7 +26,7 @@ Equipment plan: 不要只為目前的銀河計畫出發。
 Plan B: 改拍附近雲景、縮時，或轉往已確認晴朗的方向。
 Safety or retreat condition: 不要為追逐短暫空檔而進入陌生或不安全路線。
 Sources and freshness: 合成的近期觀測與較舊模式資料；精確時間未提供。
-Calibration status: 等待真實結果。
+Calibration status: 本案例沒有事後證據；若日後取得可靠資料再校準。
 ```
 
 Result: PASS.
@@ -49,7 +49,7 @@ Equipment plan: 不要為大景出發；若已在附近安全地點，只準備�
 Plan B: 在安全地點拍攝霧景或森林；否則取消。
 Safety or retreat condition: 出發截止時間仍回報觀景點在雲中，或道路／步道抓地力、視距低於使用者預先設定的安全限度時，取消或撤退。
 Sources and freshness: 合成的山頂與低地資料；CWA 霧定義見 EVIDENCE.md。
-Calibration status: 等待真實結果。
+Calibration status: 本案例沒有事後證據；若日後取得可靠資料再校準。
 ```
 
 Result: PASS.
@@ -72,7 +72,7 @@ Equipment plan: 不把 Seestar 雙窄頻濾鏡視為所有星系目標的通用�
 Plan B: 改拍月亮、與月亮角距足夠的發射星雲，或進行器材測試。
 Safety or retreat condition: 試拍影像顯示對比無法使用時，停止長時間整合。
 Sources and freshness: 合成的月亮幾何資料；ESO 與 Seestar 來源見 EVIDENCE.md。
-Calibration status: 等待真實結果。
+Calibration status: 本案例沒有事後證據；若日後取得可靠資料再校準。
 ```
 
 Result: PASS.
@@ -95,7 +95,7 @@ Equipment plan: 可以暫時準備，但不要承諾出發。
 Plan B: 改去近程地點、改期，或在室內做器材與後製工作。
 Safety or retreat condition: 出發前仍缺少必要證據時取消。
 Sources and freshness: 合成的舊截圖且無時間戳；不套用固定 T+72 信心上限。
-Calibration status: 等待真實結果。
+Calibration status: 本案例沒有事後證據；若日後取得可靠資料再校準。
 ```
 
 Result: PASS.
@@ -118,7 +118,7 @@ Equipment plan: 不起飛；使用低而穩定的腳架並固定鬆散器材。
 Plan B: 地面日落、縮時或有遮蔽的構圖。
 Safety or retreat condition: 人員無法穩定站立或腳架開始位移時停止拍攝。
 Sources and freshness: 合成風況；DJI 與台灣民航局來源見 EVIDENCE.md。
-Calibration status: 等待真實結果。
+Calibration status: 本案例沒有事後證據；若日後取得可靠資料再校準。
 ```
 
 Result: PASS.
@@ -152,4 +152,4 @@ Result: PASS.
 
 Behavioral Pilot: PASS.
 
-Sprint 5 exit gate: NOT YET COMPLETE. Three real sessions still need prediction, actual outcome and calibration review.
+Sprint 5 exit gate: COMPLETE. Real photos and other reliable outcome evidence remain optional calibration inputs.

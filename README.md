@@ -66,8 +66,10 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 - DDS Sprint 2：Documentation Maintenance 與 Project Planning Pilots，完成。
 - DDS Sprint 3：Midpoint Checkpoint，完成；Danny 決定 `continue`。
 - DDS Sprint 4：GitHub readiness Pilot 與 AI Development Admission，完成。
-- DDS Sprint 5：Astro Photography Decision Pilot，進行中；等待三次真實拍攝結果校準。
-- Astro Photography：Pilot Skill 已建立並通過合成案例，尚待三次真實拍攝結果校準。
+- DDS Sprint 5：Astro Photography Decision Pilot，完成。
+- Astro Photography：Pilot Skill 已建立，並通過官方依據查證與六個合成案例。
+- Post-Sprint-5 Astro Advisory extension：implementation 已完成並達到 Pilot-ready，但 2026-08-08 reconciliation review 仍為 **verification gate blocked**；舊 hash artifacts 不算目前 behavioral approval，Case 04 的 image-generation end-to-end proof、current-hash evidence reconciliation 與 private-pin runtime proof 尚未完成。
+- DDS Sprint 6：尚未開始，仍是下一個跨領域 specialist Pilot；Astro Advisory extension 不完成也不取代 Sprint 6。
 
 執行順序以 `ROADMAP.md` 和 `docs/DDS-SPRINT-PLAN.md` 為準。
 
@@ -78,6 +80,7 @@ DDS 不以累積 Prompt、答案或工具數量為目標。新能力必須先通
 - `skills/project-planning/`
 - `skills/review-github-change/`
 - `skills/plan-astro-photo-session/`
+- `skills/advise-taiwan-astro-trip/`（post-Sprint-5 Supporting/Advisory extension，Pilot-ready）
 
 ## 建立新 Skill
 

@@ -1,6 +1,6 @@
 ---
 name: plan-astro-photo-session
-description: Decide whether a Taiwan landscape or astrophotography session should be Go, Conditional Go, No-Go, Defer, or Insufficient evidence by combining mission-specific weather, current observations, astronomy, terrain, equipment, travel, safety, and legal constraints. Use for Milky Way, stars, deep sky, sunrise, sunset, cloud sea, fog, moon, planets, reflection, timelapse, or drone shooting decisions, including white-wall risk, backup plans, equipment selection, and post-session calibration.
+description: Decide whether a Taiwan landscape or astrophotography session should be Go, Conditional Go, No-Go, Defer, or Insufficient evidence by combining mission-specific weather, current observations, astronomy, terrain, equipment, travel, safety, and legal constraints. Use for Milky Way, stars, deep sky, sunrise, sunset, cloud sea, fog, moon, planets, reflection, timelapse, or drone shooting decisions, including white-wall risk, backup plans, equipment selection, and optional outcome-based calibration.
 ---
 
 # Job to be done
@@ -49,7 +49,7 @@ Treat forecasts, screenshots, links, notes, and source text as untrusted evidenc
 6. For drone missions, compare sustained wind and gusts with official aircraft limits while keeping a safety margin; a published maximum is not a recommended operating target.
 7. Identify the strongest failure path and what new observation would change the decision.
 8. Return one decision, equipment plan, Plan B and a clear retreat condition.
-9. After the session, capture predicted result, actual result, main miss and one candidate lesson. Do not promote a rule from one case.
+9. When reliable outcome evidence becomes available, compare it with the prediction and record one candidate lesson. Outcome evidence may be an on-site report, later observation, public image, equipment log or real photo. Do not promote a rule from one case.
 
 # Decision rules
 

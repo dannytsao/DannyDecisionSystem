@@ -13,7 +13,9 @@
 | DDS Sprint 2：首批能力 Pilot | Complete |
 | DDS Sprint 3：Midpoint Checkpoint | Complete; decision: continue |
 | DDS Sprint 4：Remaining core capabilities | Complete |
-| DDS Sprint 5：Astro Photography Decision Pilot | In progress; real outcomes pending |
+| DDS Sprint 5：Astro Photography Decision Pilot | Complete |
+| Post-Sprint-5 Astro Advisory extension | Pilot-ready; verification gate blocked after 2026-08-08 independent review |
+| DDS Sprint 6：Second specialist pilot and checkpoint | Not started; next cross-domain Pilot |
 
 ## Sprint 0：DDS Governance and Transition
 
@@ -84,7 +86,7 @@ Status: Complete
 
 ## Sprint 5：Astro Photography Decision Pilot
 
-Status: In progress
+Status: Complete
 
 依 `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md` 建立 Pilot。
 
@@ -93,9 +95,22 @@ Status: In progress
 - 分開處理觀測、預報、器材與安全證據。
 - 單次失敗不自動建立新 Rule。
 
-目前成果：Skill、官方規則查證及六個合成行為案例已通過。尚缺三次真實拍攝的預測／結果校準，因此 Sprint 5 不標記為完成。
+完成依據：Skill、官方規則查證、六個合成行為案例、安全檢查與跨 Agent Review 均已通過。
+
+實拍結果不是完成門檻。若日後取得現場回報、衛星回看、公開影像、設備紀錄或實拍影像，可作為校準來源。
+
+## Post-Sprint-5：Astro Advisory extension
+
+Status: Pilot-ready; verification gate blocked after 2026-08-08 independent review
+
+- [advise-taiwan-astro-trip Supporting Skill](skills/advise-taiwan-astro-trip/SKILL.md) 已完成 implementation，涵蓋台灣星空地點比較、dated Decision 整合、公開住宿 snapshot，以及只在明確要求時啟用的構圖／參數／完整旅程分支。
+- [六個 Pilot cases](tests/advise-taiwan-astro-trip.md) 已建立；2026-08-08 review 確認 F1 只在 local/source validation 層通過，F2/F3/F4 與 security/privacy gate 尚未通過。舊 model／surface／hash artifacts 只保留作 reconciliation input，不算目前 behavioral approval。
+- 目前 blocker：Case 04 尚未在同一個可呼叫 image-generation 的 isolated runtime 完成「文字後一次生成、生成後停止」證據；current Skill hash 為 `4d8cf8f7e2c9e0eabb79ef8b423e5f14f76cc9508558da8f142a760b8f547cd5`，舊 artifacts 多數仍引用 `ff2129…`，必須重新收斂。
+- 這是 Sprint 5 後的 advisory extension，不是 Sprint 6，也不完成或取代 Sprint 6。
 
 ## Sprint 6：Second specialist pilot and checkpoint
+
+Status: Not started; next cross-domain specialist Pilot
 
 從 IT／SysOps、Power Query、Business／Investment Risk 或 Image Analysis 選一項。完成後檢查 DDS 決策模型能否跨領域使用。
 

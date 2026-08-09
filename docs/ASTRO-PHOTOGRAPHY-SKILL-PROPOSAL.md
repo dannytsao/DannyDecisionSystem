@@ -1,6 +1,6 @@
 # Astro Photography Decision Skill Proposal
 
-Status: Accepted for DDS Sprint 5 Pilot
+Status: Completed in DDS Sprint 5
 
 Scope approval: Danny instructed Codex to start Sprint 5 on 2026-07-12.
 
@@ -50,12 +50,12 @@ Decision Skill。
 → 找出最大失敗風險
 → Go / Conditional Go / No-Go / Defer
 → Plan B 與撤退條件
-→ 拍攝後記錄結果
+→ 有可靠事後證據時進行校準
 ```
 
 ## Candidate Rules from the Old GPT
 
-以下規則只作為 Pilot 假設，尚未通過資料來源與真實案例驗證：
+以下舊規則已在 Pilot 中完成來源查證；未獲支持的固定門檻已拒絕或降級為待校準假設：
 
 | Candidate | 原始想法 | Pilot 要確認的事 |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Decision Skill。
 | 月光影響 | 月照較高時調整深空目標或濾鏡 | 目標種類、窄頻與廣角需求差異 |
 | 高空風 | 噴流較強時降低長焦或行星拍攝品質 | Seeing、地面風與器材震動必須分開 |
 
-在 Pilot 通過前，不得把這些數值描述為科學定律或成功保證。
+不得把未校準的數值描述為科學定律或成功保證。
 
 查證結果與正式來源已整理於 `skills/plan-astro-photo-session/references/EVIDENCE.md`。舊規則中的固定預報信心百分比、5 km 白牆、50% 月照濾鏡及 30 m/s 噴流震動門檻不納入正式規則。
 
@@ -96,19 +96,19 @@ Safety or retreat condition:
 Sources and freshness:
 ```
 
-## Pilot Plan
+## Pilot Result
 
-至少測試下列三類案例：
+已測試下列三類主要案例，另加入資料不足、部分任務及惡意證據案例：
 
 1. 預報良好，但即時衛星或現場觀測顯示滯留雲。
 2. 雲海條件看似成立，但山頂可能落入雲層形成白牆。
 3. 星空透明度可接受，但月光、風或器材限制使原目標不適合。
 
-每個案例記錄預測、實際結果、主要偏差及是否值得修改規則。單次失敗不自動建立新 Rule。
+合成案例驗證行為，不證明預測準確率。若日後取得可靠事後證據，再比較預測與結果。實拍只是可能來源之一；單一案例不得建立新 Rule。
 
 ## Boundary
 
 - Skill 負責決策，不負責建立天氣 API 或 App UI。
 - Weather、satellite、tide 與 astronomy 擷取可成為 Supporting Skills 或工具。
-- AstroAssistant App 是未來介面；只有 Skill 經真實案例驗證後才考慮。
+- AstroAssistant App 是未來介面；是否建立應另行通過產品價值、安全與維護成本審查，不綁定實拍次數。
 - 本 Pilot 不建立天氣 API、App UI 或自動化，也不提前開始 Sprint 6。

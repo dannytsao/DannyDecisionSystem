@@ -25,7 +25,8 @@
 - AI Development Assistance Admission decision, merged into existing planning and execution capabilities.
 - DDS Sprint 4 completion record.
 - Astro Photography Decision Pilot with official evidence review and six synthetic behavior cases.
-- Sprint 5 checkpoint that keeps real-session calibration as an open exit gate.
+- Sprint 5 checkpoint and completion record; real-session comparison is optional calibration evidence, not an exit gate.
+- Post-Sprint-5 [Astro Advisory Supporting Skill](skills/advise-taiwan-astro-trip/SKILL.md), [six Pilot cases](tests/advise-taiwan-astro-trip.md), compact Taiwan location profiles, evidence policy, and adversarial replays. The 2026-08-08 reconciliation review keeps the extension Pilot-ready but verification-gate blocked: F2/F3/F4 and security/privacy are not approved, old hash/model/surface artifacts are non-authoritative, and Case 04 still lacks end-to-end image-generation proof.
 
 ### Changed
 
@@ -39,3 +40,5 @@
 - Added the DDS Sprint checkpoint filename rule while preserving historical DannyOS milestone names.
 - Completed DDS Sprint 4 without duplicating task planning or general coding capabilities.
 - Rejected unsupported universal astro thresholds instead of carrying them forward from the old GPT.
+- Corrected Sprint 5 governance so calibration can use reliable outcome evidence without requiring a real photo session.
+- Recorded the Astro Advisory work as a post-Sprint-5 extension without changing roadmap sequencing: Sprint 6 is still not started and remains the next cross-domain specialist Pilot.

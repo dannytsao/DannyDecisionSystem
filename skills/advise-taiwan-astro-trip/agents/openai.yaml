@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taiwan Astro Trip Advisor"
+  short_description: "Taiwan astro locations, lodging, imaging, and trip advice"
+  default_prompt: "Use $advise-taiwan-astro-trip to compare Taiwan astro locations, integrate dated shooting assessments, check lodging and public room details, give requested composition images and parameters, or plan a complete trip when explicitly asked."

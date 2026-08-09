@@ -1,12 +1,18 @@
 # DDS Sprint 5 Pilot Checkpoint
 
-Date: 2026-07-12
+Date: 2026-07-13
 
-Status: In progress — real outcomes pending
+Status: Complete
 
 ## Original outcome and exit criteria
 
-Build an Astro Photography Decision Pilot and complete prediction/outcome calibration for three real scene types: white wall or cloud sea, star or deep-sky conditions, and one equipment/safety constraint.
+Original wording on 2026-07-12: build the Pilot and complete prediction/outcome calibration for three real scene types.
+
+This was superseded by Danny's 2026-07-13 adjustment because real photos are only one optional calibration source.
+
+## Revised exit criteria
+
+Build an Astro Photography Decision Pilot that passes official evidence review, six behavior cases, safety checks and cross-Agent review across cloud/fog, night-sky and equipment/safety scenarios.
 
 ## Completed
 
@@ -17,31 +23,30 @@ Build an Astro Photography Decision Pilot and complete prediction/outcome calibr
 
 Evidence: `skills/plan-astro-photo-session/`, `docs/ASTRO-PHOTOGRAPHY-SKILL-PROPOSAL.md`, and `tests/astro-photo-session.md`.
 
-## Remaining work
+## Calibration policy correction
 
-Record three real sessions with:
+Real-photo comparison is optional, not a Sprint exit gate. A prediction may have no later photo session to compare.
 
-1. Evidence available before the decision.
-2. Skill decision and confidence.
-3. Actual on-site or imaging result.
-4. Main mismatch and whether it repeats an existing pattern.
+When reliable outcome evidence exists, calibration may use:
 
-Required coverage:
+- on-site observation or user report;
+- later satellite or weather observation;
+- public image or observing record;
+- equipment log;
+- real photo or imaging result.
 
-- cloud sea, fog or white-wall case;
-- Milky Way, stars or deep-sky case;
-- drone, wind, moon, equipment or safety case.
+No outcome evidence means `not calibrated`, not `failed`, and does not block Skill use or Sprint completion.
 
 ## Risks and scope
 
-- Synthetic cases cannot prove local forecast accuracy.
+- Synthetic cases validate behavior but do not prove local forecast accuracy.
 - One failed trip must not become a permanent Rule.
-- No weather API, AstroAssistant App, automation or Sprint 6 work begins here.
+- No weather API, AstroAssistant App or automation was added.
 
 ## Recommendation
 
-`continue` Sprint 5 only through real-session calibration. Do not mark it complete or start Sprint 6 yet.
+Mark Sprint 5 complete. Keep future calibration opportunistic and evidence-based.
 
 ## User decision
 
-Pending after real-session evidence becomes available.
+`adjust` — Danny clarified on 2026-07-13 that real photos are only one calibration method and are not mandatory.
