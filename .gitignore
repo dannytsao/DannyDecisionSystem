@@ -1,0 +1,6 @@
+# Local Codex/OMO execution state and evidence
+.omo/
+.codex/
+
+# macOS metadata
+.DS_Store
