@@ -21,6 +21,9 @@ jobs:
       - name: Check out DDS
         uses: actions/checkout@v4
 
+      - name: Install regression dependencies
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends --yes ripgrep
+
       - name: Run DDS cloud runner
         env:
           DDS_ARTIFACT_DIR: ${{ runner.temp }}/dds-runner
