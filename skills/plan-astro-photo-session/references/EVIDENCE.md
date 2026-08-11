@@ -2,6 +2,27 @@
 
 Checked: 2026-07-12
 
+## Current-run evidence rule
+
+Every dated Go／No-Go run must build a new evidence snapshot. Do not treat model memory, a previous chat, an earlier decision record or a saved summary as current conditions.
+
+### Weather
+
+- Query the latest applicable observations and current satellite and/or radar products during the run; query forecasts again for the requested shooting window.
+- Record the source URL or product, queried station/grid/location, `checked-at`, observation or issue time, valid time/window and timezone.
+- A screenshot or user-supplied value without a visible source and timestamp is unverified or stale evidence, not a current observation.
+
+### Astronomy
+
+- Recalculate Sun, Moon, Milky Way or target geometry for the requested date, time, coordinates and timezone during the run.
+- Record the calculation source/library/service and calculation time. Do not reuse a remembered monthly table or a result calculated for another location or date.
+
+### Mandatory fallback
+
+If current data cannot be retrieved, its freshness cannot be confirmed, or it does not cover the mission window, label freshness `Unavailable` or `Partially current` and return `Defer` or `Insufficient evidence`. Never replace missing current evidence with memory. A separately verified current hard safety, legal or access failure may still require `No-Go`.
+
+Stable equipment or terrain facts may be reused when still applicable, but they cannot satisfy this current-run evidence rule.
+
 ## Supported principles
 
 - Taiwan CWA explains that fog forms when air cools to saturation or moisture increases, and distinguishes several mechanisms including radiation, advection and upslope fog. It generally calls horizontal visibility below 1 km fog and below 200 m dense fog. Therefore 5 km is not a universal white-wall threshold. [CWA fog overview](https://pweb.cwa.gov.tw/PopularScience/wt/wt_12.html)
