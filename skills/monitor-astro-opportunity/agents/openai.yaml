@@ -1,0 +1,4 @@
+interface:
+  display_name: "天文機會定期監測"
+  short_description: "定期產生最新天文攝影機會報告並支援 Email 寄送"
+  default_prompt: "使用 $monitor-astro-opportunity，以繁體中文逐步詢問地點、觀測標的與其他必要參數，再設定定期天文攝影機會報告。"
