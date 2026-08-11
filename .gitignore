@@ -2,5 +2,8 @@
 .omo/
 .codex/
 
+# Local Agent skill wiring
+.agents/
+
 # macOS metadata
 .DS_Store

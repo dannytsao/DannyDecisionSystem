@@ -1,0 +1,9 @@
+.git
+.agents
+.codex
+.omo
+.codegraph
+.DS_Store
+graphify-out
+__pycache__
+.venv

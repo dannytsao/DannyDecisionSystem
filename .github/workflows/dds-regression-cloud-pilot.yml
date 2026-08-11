@@ -1,0 +1,37 @@
+name: DDS regression cloud pilot
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 08:07 Asia/Taipei, expressed in UTC to avoid an hourly-boundary run.
+    - cron: "7 0 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dds-regression-cloud-pilot
+  cancel-in-progress: false
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out DDS
+        uses: actions/checkout@v4
+
+      - name: Run DDS cloud runner
+        env:
+          DDS_ARTIFACT_DIR: ${{ runner.temp }}/dds-runner
+          DDS_JOB_NAME: dds-regression
+          DDS_RUN_ID: github-${{ github.run_id }}
+        run: bash automation/run-job.sh
+
+      - name: Upload runner artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dds-regression-${{ github.run_id }}
+          path: ${{ runner.temp }}/dds-runner/
+          if-no-files-found: warn
