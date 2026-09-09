@@ -30,6 +30,7 @@ from build_manifest import (
     SessionManifest,
     build_manifest,
 )
+from failure_report import write_failed_report
 
 
 @dataclass(frozen=True)
@@ -172,7 +173,13 @@ def main(input_root: Path, output: Path | None = None) -> None:
     try:
         generated = generate_script(input_root, destination)
     except (ManifestInputError, RecipeGenerationError) as error:
-        typer.echo(str(error), err=True)
+        report = write_failed_report(
+            destination,
+            operation="generate_siril_script",
+            reason=str(error),
+            input_root=input_root,
+        )
+        typer.echo(f"{error}\nfailed report written: {report}", err=True)
         raise typer.Exit(code=2) from error
     typer.echo(f"Siril dry-run script written: {generated}")
 

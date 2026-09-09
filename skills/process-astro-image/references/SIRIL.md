@@ -2,6 +2,8 @@
 
 `generate_siril_script.py` 只產生 `.ssf`，不呼叫 Siril。Siril 的官方文件說明 `.ssf` 可由 GUI 的 `@` 指令或 `siril-cli -s` 執行；本 Skill 不會自動呼叫後者。取得明確核准後，可在新的隔離 run 目錄人工執行已審查腳本，並記錄 exit code、註冊比例與輸出檔。
 
+Siril 的 `save` 命令只寫 FITS；因此每個 `result*.fit` 產生後，必須再執行 `scripts/export_dng_sidecars.py`。該工具先用 Siril 輸出 16-bit PPM，再用 DNGLab `makedng --map 0:raw` 寫出 Linear DNG，並用 DNGLab structure 檢查 `DNGVersion`。這是已處理影像的 DNG companion，不是原始 Bayer RAW；任何轉換或驗證失敗都會產生 `failed-report.md`，不會建立假 DNG。
+
 官方參考：[Siril scripting](https://siril.readthedocs.io/en/stable/Scripts.html)、[Siril script files](https://siril.readthedocs.io/en/latest/scripts/Script-files.html)、[Siril commands 1.4.4](https://siril.readthedocs.io/en/stable/Commands.html)。
 
 ## Invocation
@@ -39,6 +41,12 @@ autostretch
 save result_autostretched
 savepng result_preview
 close
+```
+
+執行後的 DNG 配對：
+
+```text
+uv run --script scripts/export_dng_sidecars.py RUN_DIR [--siril-cli PATH] [--dnglab PATH]
 ```
 
 `register -2pass` 後的 `seqapplyreg` 是必要步驟；它會產生供 `stack` 使用的已對齊序列。BXT／SXT／NXT、calibration mapping、QA 與真正執行留待後續核准的 adapter slice。

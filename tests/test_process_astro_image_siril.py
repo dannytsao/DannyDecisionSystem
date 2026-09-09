@@ -9,9 +9,11 @@ import sys
 from pathlib import Path
 
 import pytest
+import typer
 
 SCRIPT_DIR = Path(__file__).parents[1] / "skills/process-astro-image/scripts"
 sys.path.insert(0, str(SCRIPT_DIR))
+EXIT_FAILURE = 2
 SPEC = importlib.util.spec_from_file_location(
     "generate_siril_script",
     SCRIPT_DIR / "generate_siril_script.py",
@@ -92,3 +94,19 @@ def test_generator_omits_debayer_for_mono_fits(tmp_path: Path) -> None:
         if line.startswith("convert light")
     )
     assert "-debayer" not in convert_line
+
+
+def test_generator_cli_writes_failed_report_when_preflight_blocks(
+    tmp_path: Path,
+) -> None:
+    """Given blocked recipe generation, the CLI writes a failed report."""
+    (tmp_path / "notes.txt").write_text("not an image", encoding="utf-8")
+    output = tmp_path.parent / "blocked.ssf"
+
+    with pytest.raises(typer.Exit) as caught:
+        MODULE.main(tmp_path, output)
+
+    assert caught.value.exit_code == EXIT_FAILURE
+    report = tmp_path.parent / "blocked-failed-report.md"
+    assert report.is_file()
+    assert "preflight_blocked" in report.read_text(encoding="utf-8")

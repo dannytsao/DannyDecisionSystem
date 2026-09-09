@@ -69,6 +69,7 @@ LLM 僅可提出或解釋 recipe；實際檔案處理由 Siril／RC-Astro adapte
 - 中間產物：校準後、註冊後、堆疊後、BXT／SXT／NXT 後及最終輸出。
 - `qa`：NaN、裁切、背景平坦度、星點統計、必要時的 SNR 或 histogram 摘要。
 - `report.md`：結論、版本、模型、參數、警告、失敗步驟與重跑方式。
+- Result companions：每個 `result*.fit` 都必須有同 stem 的 `result*.dng`；DNG 無法產生或驗證時必須輸出 `failed-report.md`，不得只改副檔名。
 - 前後預覽；預覽不得被當成精確科學測量或成功保證。
 
 ## Reference Projects and Reuse Policy
@@ -179,6 +180,7 @@ Pilot 通過前，必須證明：
 - Dry-run: `/Users/dannytsao/Documents/M106-siril-dry-run.ssf` 已產生，包含 OSC `-debayer`、`register -2pass`、`seqapplyreg`、加權 rejection stack 與預覽保存。
 - Isolated execution: 為避免寫入原始 session，將 Lights 原樣複製到 `/Users/dannytsao/Documents/M106-pilot-run-20260909/`，並以 `/Applications/Siril.app/Contents/MacOS/siril-cli -s /Users/dannytsao/Documents/M106-pilot-run-20260909.ssf` 執行；Siril 1.4.4 exit code=0。
 - Registration result: 10 個 frame 轉換成功，但只有 3/10 成功註冊；其餘 7 個被 Siril 排除。`result.fit`（32-bit FITS）、`result_linear.fit`、`result_autostretched.fit` 與 `result_preview.png` 已產生，因此這是「工具流程成功、影像品質條件式通過」而非完整 10-frame 成功。
+- DNG companions: 使用 DNGLab 0.8.0 將每個 result FITS 經 16-bit PPM 中介轉為 Linear DNG，並以 structure 檢查 `DNGVersion`；`result.dng`、`result_linear.dng`、`result_autostretched.dng` 均已產生。這些是已處理影像的 companion，不宣稱保留原始 Bayer RAW 語義。
 - Failure diagnosis: `light_.seq` 只為 frame 8–10 寫入 registration transform；FITS header 顯示 frame 7→8 有 3 分 34 秒間隔且 RA/DEC 分組改變。轉換後像素峰值也顯示 frame 1–7 明顯較弱（max 40,188–43,231、>50,000 像素為 0），frame 8–10 則為 max 63,500–65,202、>50,000 像素 22–27 個。證據支持「構圖變化 + 前 7 張星點對比不足」的組合原因；無法僅由現有資料判定是失焦、透光度、追蹤或其他拍攝因素。
 - Visual/quality caveat: 預覽仍呈現明顯雜訊，且目前只有 3 張 frame 進入 stack；不得把它視為 M106 最終成品或 RC-Astro 輸入品質已獲保證。
 - Safety: 原始 `/Users/dannytsao/Documents/M106/Lights/` 10 個檔案與隔離副本 SHA-256 完全一致；原始 session 未被改寫。RC-Astro、calibration mapping 與獨立 QA 仍未開放。

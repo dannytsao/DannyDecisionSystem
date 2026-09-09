@@ -29,6 +29,7 @@ from enum import Enum
 from pathlib import Path  # noqa: TC003 - Path is also used at runtime
 from typing import Final, Literal
 
+from failure_report import write_failed_report
 from fits_header import FitsHeaderError, FitsMetadata, is_fits, read_fits_metadata
 
 SUPPORTED_SUFFIXES: Final = frozenset(
@@ -254,15 +255,42 @@ def main(input_root: Path, output: Path | None = None) -> None:
     try:
         manifest = build_manifest(input_root)
     except ManifestInputError as error:
-        typer.echo(str(error), err=True)
+        report = write_failed_report(
+            input_root.parent / f"{input_root.name}-manifest.json",
+            operation="build_manifest",
+            reason=str(error),
+            input_root=input_root,
+        )
+        typer.echo(f"{error}\nfailed report written: {report}", err=True)
         raise typer.Exit(code=2) from error
 
     serialized = _json_ready(manifest)
     if output is None:
         typer.echo(serialized, nl=False)
-        return
-    output.write_text(serialized, encoding="utf-8")
-    typer.echo(f"manifest written: {output}")
+    else:
+        try:
+            output.write_text(serialized, encoding="utf-8")
+        except OSError as error:
+            report = write_failed_report(
+                output,
+                operation="build_manifest",
+                reason=str(error),
+                input_root=input_root,
+            )
+            typer.echo(f"{error}\nfailed report written: {report}", err=True)
+            raise typer.Exit(code=2) from error
+        typer.echo(f"manifest written: {output}")
+
+    if manifest.preflight.status == "blocked":
+        report_target = output or input_root.parent / f"{input_root.name}-manifest.json"
+        report = write_failed_report(
+            report_target,
+            operation="build_manifest",
+            reason=", ".join(manifest.preflight.blocking_checks),
+            input_root=input_root,
+        )
+        typer.echo(f"failed report written: {report}", err=True)
+        raise typer.Exit(code=2)
 
 
 if __name__ == "__main__":

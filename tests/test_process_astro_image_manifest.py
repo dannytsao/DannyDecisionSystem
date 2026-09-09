@@ -9,6 +9,9 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import pytest
+import typer
+
 SCRIPT_PATH = (
     Path(__file__).parents[1] / "skills/process-astro-image/scripts/build_manifest.py"
 )
@@ -21,6 +24,7 @@ MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 EXPECTED_WIDTH = 2
+EXIT_FAILURE = 2
 
 
 def _fits_bytes(*, width: int = 2, height: int = 2, bitpix: int = -32) -> bytes:
@@ -126,3 +130,19 @@ def test_manifest_ignores_its_generated_json_artifact(tmp_path: Path) -> None:
 
     assert manifest.preflight.status == "ready_for_review"
     assert len(manifest.files) == 1
+
+
+def test_manifest_cli_writes_failed_report_when_preflight_blocks(
+    tmp_path: Path,
+) -> None:
+    """Given blocked intake, the CLI writes a failed report before exiting."""
+    (tmp_path / "notes.txt").write_text("not an image", encoding="utf-8")
+    output = tmp_path / "manifest.json"
+
+    with pytest.raises(typer.Exit) as caught:
+        MODULE.main(tmp_path, output)
+
+    assert caught.value.exit_code == EXIT_FAILURE
+    report = tmp_path / "manifest-failed-report.md"
+    assert report.is_file()
+    assert "has_light_frames" in report.read_text(encoding="utf-8")
