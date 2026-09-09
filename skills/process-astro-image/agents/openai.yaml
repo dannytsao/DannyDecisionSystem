@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process Astro Image"
+  short_description: "Plan and verify local astrophotography post-processing"
+  default_prompt: "Use $process-astro-image to inspect a session and create a safe dry-run processing plan."
