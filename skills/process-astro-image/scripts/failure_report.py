@@ -23,6 +23,7 @@ _OPERATION_NAMES = {
     "run_siril": "執行 Siril 流程",
     "export_dng_sidecars": "產生結果檔案 companion",
     "prepare_tile_runs": "準備視野分組 run",
+    "tile_qa": "檢查視野分組品質",
 }
 _REASON_NAMES = {
     "has_light_frames": "找不到 Lights（亮場）檔案",

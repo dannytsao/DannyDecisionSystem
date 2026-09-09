@@ -26,6 +26,7 @@ Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSO
 3. 產生 dry-run recipe：Siril 校準／註冊／堆疊，接著依核准 recipe 使用 RC-Astro BXT／SXT／NXT，最後 QA 與報告；目前只產生 Siril `.ssf`，不執行。
 4. 把需要使用者決定的 recipe、缺漏資料與主要風險列出，等待核准。
 5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，含混合視野時先用 `scripts/prepare_tile_runs.py` 建立隔離 tile runs，再使用 `scripts/run_siril.py` 逐一執行已審查的 Siril `.ssf`，並自動呼叫 DNG/TIFF companion exporter。任一步驟失敗都必須寫入 `Failed/failed-report.md` 並停止；RC-Astro 仍未開放。
+6. 完成 tile run 後使用 `scripts/tile_qa.py` 產生註冊率摘要、排除 frame 清單與預覽 contact sheet。註冊被排除是品質選擇，不自動視為工具失敗；輸出 companion 缺漏或 QA 工具錯誤仍須寫入 `Failed/failed-report.md`。
 
 ## Required output
 
@@ -38,6 +39,7 @@ Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSO
 - Siril `.ssf`：絕對路徑、保守的 convert／register／seqapplyreg／stack／preview 命令，供人工檢查。
 - Result companions：每個 `result*.fit` 優先產生同 stem 的真正 DNG；若 DNG 工具或驗證失敗，改由 Siril 產生同 stem 的 `.tif`（或 `.tiff`）。兩者都失敗時才寫入 `Failed/failed-report.md`，不得只改副檔名。
 - 警告：FITS header、工具版本、模型與授權等尚未完成的 gate。
+- tile QA：`tile-qa.md`、`qa/tile-qa.json` 與 `qa/contact-sheet.png`；這些是 mosaic 前的審查資料，不代表最終影像已通過科學或美學 QA。
 
 後續完整 run 還必須保存校準後、堆疊後、BXT／SXT／NXT 後的中間產物、QA 與 `report.md`；預覽不是科學測量或成功保證。
 
