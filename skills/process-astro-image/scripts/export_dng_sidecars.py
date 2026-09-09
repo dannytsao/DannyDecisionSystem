@@ -17,7 +17,7 @@
 
 # ruff: noqa: CPY001, EM101
 
-"""Create validated DNG companions for every result FITS output."""
+"""Create validated DNG or TIFF companions for every result FITS output."""
 
 from __future__ import annotations
 
@@ -46,6 +46,17 @@ def dng_sidecar_path(fit_path: Path) -> Path:
     return fit_path.with_suffix(".dng")
 
 
+def tif_sidecar_path(fit_path: Path) -> Path:
+    """Map a result FITS path to the canonical same-stem TIFF companion."""
+    return fit_path.with_suffix(".tif")
+
+
+def _tiff_candidates(fit_path: Path) -> tuple[Path, ...]:
+    """Return accepted TIFF spellings in preference order."""
+    tif_path = tif_sidecar_path(fit_path)
+    return tif_path, fit_path.with_suffix(".tiff")
+
+
 def result_fits(output_root: Path) -> tuple[Path, ...]:
     """Return result FITS files in deterministic order."""
     return tuple(
@@ -59,6 +70,16 @@ def missing_dng_outputs(output_root: Path) -> tuple[Path, ...]:
         dng_path
         for fit_path in result_fits(output_root)
         if not (dng_path := dng_sidecar_path(fit_path)).is_file()
+    )
+
+
+def missing_result_companions(output_root: Path) -> tuple[Path, ...]:
+    """Return FITS results that have neither DNG nor TIFF companions."""
+    return tuple(
+        fit_path
+        for fit_path in result_fits(output_root)
+        if not dng_sidecar_path(fit_path).is_file()
+        and not any(path.is_file() for path in _tiff_candidates(fit_path))
     )
 
 
@@ -100,6 +121,36 @@ def _run_siril_export(
         raise DngExportError("siril_export", detail or "Siril did not create PPM")
 
 
+def _run_siril_tif(
+    siril: Path,
+    output_root: Path,
+    fit_path: Path,
+    tif_path: Path,
+) -> Path:
+    """Ask Siril for a 32-bit TIFF and return the file it actually wrote."""
+    tif_name = tif_path.with_suffix("").relative_to(output_root).as_posix()
+    script = (
+        "requires 1.4.0\n"
+        f"load '{fit_path.name}'\n"
+        f"savetif32 '{tif_name}'\n"
+        "close\n"
+    )
+    result = subprocess.run(  # noqa: S603 - tool path is explicitly resolved
+        [str(siril), "-d", str(output_root), "-s", "-"],
+        input=script,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    candidates = (tif_path, tif_path.with_suffix(".tiff"))
+    created = next((path for path in candidates if path.is_file()), None)
+    if result.returncode != 0 or created is None:
+        detail = (result.stderr or result.stdout).strip()[-800:]
+        raise DngExportError("tiff_export", detail or "Siril did not create TIFF")
+    _validate_tif(created)
+    return created
+
+
 def _run_dnglab(dnglab: Path, ppm_path: Path, dng_path: Path) -> None:
     result = subprocess.run(  # noqa: S603 - tool path is explicitly resolved
         [
@@ -138,35 +189,122 @@ def _validate_dng(dnglab: Path, dng_path: Path) -> None:
         )
 
 
-def export_dng_sidecars(
+def _validate_tif(tif_path: Path) -> None:
+    """Verify a TIFF has a valid byte-order and magic header."""
+    header = tif_path.read_bytes()[:4]
+    if header not in {b"II*\x00", b"MM\x00*"}:
+        raise DngExportError("tiff_validation", "TIFF 標頭無法讀取")
+
+
+def _export_tif(
+    siril: Path,
     output_root: Path,
-    *,
-    siril_cli: Path | None = None,
-    dnglab: Path | None = None,
-) -> tuple[Path, ...]:
-    """Export and validate one DNG companion for every result FITS file."""
-    if not output_root.is_dir():
-        raise DngExportError("output_root", f"directory does not exist: {output_root}")
-    fits = result_fits(output_root)
-    if not fits:
-        raise DngExportError("no_results", "no result*.fit files found")
-    siril = _find_tool(siril_cli, "siril-cli")
-    converter = _find_tool(dnglab, "dnglab")
-    generated: list[Path] = []
-    for fit_path in fits:
-        dng_path = dng_sidecar_path(fit_path)
-        if dng_path.exists():
+    fit_path: Path,
+    tif_path: Path,
+) -> Path:
+    """Create the accepted TIFF fallback in the final output directory."""
+    with tempfile.TemporaryDirectory(prefix=".dds-tif-", dir=output_root) as temp_dir:
+        temporary_tif = Path(temp_dir) / tif_path.name
+        created = _run_siril_tif(siril, output_root, fit_path, temporary_tif)
+        shutil.copy2(created, tif_path)
+    _validate_tif(tif_path)
+    return tif_path
+
+
+def _existing_companion(
+    fit_path: Path,
+    converter: Path | None,
+) -> Path | None:
+    """Return an already validated companion, if one exists."""
+    dng_path = dng_sidecar_path(fit_path)
+    if dng_path.is_file() and converter is None:
+        return dng_path
+    if dng_path.is_file() and converter is not None:
+        try:
             _validate_dng(converter, dng_path)
-            generated.append(dng_path)
-            continue
+        except DngExportError:
+            pass
+        else:
+            return dng_path
+    for tif_path in _tiff_candidates(fit_path):
+        if tif_path.is_file():
+            _validate_tif(tif_path)
+            return tif_path
+    return None
+
+
+def _try_export_dng(
+    siril: Path,
+    converter: Path | None,
+    output_root: Path,
+    fit_path: Path,
+    dng_path: Path,
+) -> tuple[Path | None, DngExportError | None]:
+    """Try DNG export and return a typed error for the TIFF fallback."""
+    if converter is None:
+        return None, None
+    try:
         with tempfile.TemporaryDirectory(
             prefix=".dds-dng-", dir=output_root,
         ) as temp_dir:
             ppm_path = Path(temp_dir) / "converted.ppm"
             _run_siril_export(siril, output_root, fit_path, ppm_path)
             _run_dnglab(converter, ppm_path, dng_path)
-        generated.append(dng_path)
-    return tuple(generated)
+    except DngExportError as error:
+        dng_path.unlink(missing_ok=True)
+        return None, error
+    return dng_path, None
+
+
+def _export_companion(
+    siril: Path,
+    converter: Path | None,
+    output_root: Path,
+    fit_path: Path,
+) -> Path:
+    """Create one DNG, falling back to TIFF when necessary."""
+    existing = _existing_companion(fit_path, converter)
+    if existing is not None:
+        return existing
+    dng_path, dng_error = _try_export_dng(
+        siril, converter, output_root, fit_path, dng_sidecar_path(fit_path),
+    )
+    if dng_path is not None:
+        return dng_path
+    try:
+        return _export_tif(
+            siril, output_root, fit_path, tif_sidecar_path(fit_path),
+        )
+    except DngExportError as tif_error:
+        if dng_error is not None:
+            raise DngExportError(
+                "companion_export",
+                f"DNG: {dng_error}; TIFF: {tif_error}",
+            ) from tif_error
+        raise
+
+
+def export_dng_sidecars(
+    output_root: Path,
+    *,
+    siril_cli: Path | None = None,
+    dnglab: Path | None = None,
+) -> tuple[Path, ...]:
+    """Export one validated DNG, or a TIFF fallback, per result FITS file."""
+    if not output_root.is_dir():
+        raise DngExportError("output_root", f"directory does not exist: {output_root}")
+    fits = result_fits(output_root)
+    if not fits:
+        raise DngExportError("no_results", "no result*.fit files found")
+    siril = _find_tool(siril_cli, "siril-cli")
+    try:
+        converter = _find_tool(dnglab, "dnglab")
+    except DngExportError:
+        converter = None
+    return tuple(
+        _export_companion(siril, converter, output_root, fit_path)
+        for fit_path in fits
+    )
 
 
 def main(
@@ -174,7 +312,7 @@ def main(
     siril_cli: Path | None = None,
     dnglab: Path | None = None,
 ) -> None:
-    """Export DNG companions and emit a failed report on any error."""
+    """Export DNG/TIFF companions and emit a failed report on any error."""
     import typer  # noqa: PLC0415 - optional CLI dependency loaded only at boundary
 
     try:
@@ -192,7 +330,9 @@ def main(
         )
         typer.echo(f"{error}\nfailed report written: {report}", err=True)
         raise typer.Exit(code=2) from error
-    typer.echo(f"DNG sidecars ready: {', '.join(str(path) for path in generated)}")
+    typer.echo(
+        f"DNG/TIFF companions ready: {', '.join(str(path) for path in generated)}",
+    )
 
 
 if __name__ == "__main__":

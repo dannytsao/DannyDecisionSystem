@@ -69,7 +69,7 @@ LLM 僅可提出或解釋 recipe；實際檔案處理由 Siril／RC-Astro adapte
 - 中間產物：校準後、註冊後、堆疊後、BXT／SXT／NXT 後及最終輸出。
 - `qa`：NaN、裁切、背景平坦度、星點統計、必要時的 SNR 或 histogram 摘要。
 - `report.md`：結論、版本、模型、參數、警告、失敗步驟與重跑方式。
-- Result companions：每個 `result*.fit` 都必須有同 stem 的 `result*.dng`；DNG 無法產生或驗證時必須輸出 `failed-report.md`，不得只改副檔名。
+- Result companions：每個 `result*.fit` 優先有同 stem 的真正 `result*.dng`；若 DNG 無法產生或驗證，接受同 stem 的 `result*.tif`／`result*.tiff` 作為備援。DNG 與 TIFF 都失敗時，才在 `Failed/failed-report.md` 輸出簡明中文失敗報告，不得只改副檔名。
 - 前後預覽；預覽不得被當成精確科學測量或成功保證。
 
 ## Reference Projects and Reuse Policy
@@ -181,7 +181,8 @@ Pilot 通過前，必須證明：
 - Isolated execution: 為避免寫入原始 session，將 Lights 原樣複製到 `/Users/dannytsao/Documents/M106-pilot-run-20260909/`，並以 `/Applications/Siril.app/Contents/MacOS/siril-cli -s /Users/dannytsao/Documents/M106-pilot-run-20260909.ssf` 執行；Siril 1.4.4 exit code=0。
 - Registration result: 10 個 frame 轉換成功，但只有 3/10 成功註冊；其餘 7 個被 Siril 排除。`result.fit`（32-bit FITS）、`result_linear.fit`、`result_autostretched.fit` 與 `result_preview.png` 已產生，因此這是「工具流程成功、影像品質條件式通過」而非完整 10-frame 成功。
 - DNG companions: 使用 DNGLab 0.8.0 將每個 result FITS 經 16-bit PPM 中介轉為 Linear DNG，並以 structure 檢查 `DNGVersion`；`result.dng`、`result_linear.dng`、`result_autostretched.dng` 均已產生。這些是已處理影像的 companion，不宣稱保留原始 Bayer RAW 語義。
-- Failure reporting: manifest blocked、recipe generation、Siril non-zero exit，以及 DNG export/validation failure 都必須 append-only 寫入 `failed-report.md`；受控執行入口為 `scripts/run_siril.py`。
+- Companion fallback: 若 DNGLab 不可用或 DNG 驗證失敗，exporter 會改用 Siril `savetif32` 產生同 stem 的 TIFF；只有 DNG 與 TIFF 都失敗時才停止並寫入 `Failed/failed-report.md`。
+- Failure reporting: manifest blocked、recipe generation、Siril non-zero exit，以及 DNG/TIFF export 都失敗時，必須 append-only 寫入 `Failed/failed-report.md`；報告使用簡明中文，受控執行入口為 `scripts/run_siril.py`。
 - Failure diagnosis: `light_.seq` 只為 frame 8–10 寫入 registration transform；FITS header 顯示 frame 7→8 有 3 分 34 秒間隔且 RA/DEC 分組改變。轉換後像素峰值也顯示 frame 1–7 明顯較弱（max 40,188–43,231、>50,000 像素為 0），frame 8–10 則為 max 63,500–65,202、>50,000 像素 22–27 個。證據支持「構圖變化 + 前 7 張星點對比不足」的組合原因；無法僅由現有資料判定是失焦、透光度、追蹤或其他拍攝因素。
 - Visual/quality caveat: 預覽仍呈現明顯雜訊，且目前只有 3 張 frame 進入 stack；不得把它視為 M106 最終成品或 RC-Astro 輸入品質已獲保證。
 - Safety: 原始 `/Users/dannytsao/Documents/M106/Lights/` 10 個檔案與隔離副本 SHA-256 完全一致；原始 session 未被改寫。RC-Astro、calibration mapping 與獨立 QA 仍未開放。

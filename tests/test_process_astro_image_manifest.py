@@ -143,6 +143,6 @@ def test_manifest_cli_writes_failed_report_when_preflight_blocks(
         MODULE.main(tmp_path, output)
 
     assert caught.value.exit_code == EXIT_FAILURE
-    report = tmp_path / "manifest-failed-report.md"
+    report = tmp_path / "Failed" / "failed-report.md"
     assert report.is_file()
     assert "has_light_frames" in report.read_text(encoding="utf-8")

@@ -107,6 +107,6 @@ def test_generator_cli_writes_failed_report_when_preflight_blocks(
         MODULE.main(tmp_path, output)
 
     assert caught.value.exit_code == EXIT_FAILURE
-    report = tmp_path.parent / "blocked-failed-report.md"
+    report = tmp_path.parent / "Failed" / "failed-report.md"
     assert report.is_file()
     assert "preflight_blocked" in report.read_text(encoding="utf-8")

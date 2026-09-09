@@ -1,6 +1,6 @@
-# ruff: noqa: INP001, S101, CPY001
+# ruff: noqa: INP001, S101, CPY001, RUF001, EM101
 
-"""Behavior tests for failure reports and FITS/DNG output pairing."""
+"""Behavior tests for failure reports and FITS companion pairing."""
 
 from __future__ import annotations
 
@@ -46,20 +46,20 @@ def test_failed_report_is_written_with_stable_failure_fields(tmp_path: Path) -> 
         input_root=tmp_path / "M106",
     )
 
-    assert report == tmp_path / "m106-manifest-failed-report.md"
+    assert report == tmp_path / "Failed" / "failed-report.md"
     content = report.read_text(encoding="utf-8")
-    assert "status: failed" in content
-    assert "operation: build_manifest" in content
-    assert "reason: fits_headers" in content
+    assert "狀態：失敗" in content
+    assert "建立影像資料清單" in content
+    assert "FITS 標頭無法讀取" in content
 
 
-def test_result_fits_require_matching_dng_sidecars(tmp_path: Path) -> None:
-    """Given result FITS files, missing same-stem DNG sidecars are reported."""
+def test_result_fits_require_matching_dng_or_tiff_sidecars(tmp_path: Path) -> None:
+    """Given result FITS files, missing DNG/TIFF companions are reported."""
     (tmp_path / "result.fit").write_bytes(b"fit")
     (tmp_path / "result_linear.fit").write_bytes(b"fit")
     (tmp_path / "result_linear.dng").write_bytes(b"dng")
 
-    assert EXPORT_DNG.missing_dng_outputs(tmp_path) == (tmp_path / "result.dng",)
+    assert EXPORT_DNG.missing_result_companions(tmp_path) == (tmp_path / "result.fit",)
 
 
 def test_dng_sidecar_path_preserves_result_stem(tmp_path: Path) -> None:
@@ -71,6 +71,37 @@ def test_dng_sidecar_path_preserves_result_stem(tmp_path: Path) -> None:
     )
 
 
+def test_tiff_fallback_is_used_when_dnglab_is_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Given no DNGLab, the exporter writes a validated TIFF companion."""
+    (tmp_path / "result.fit").write_bytes(b"fit")
+    siril = tmp_path / "siril-cli"
+
+    def resolve_tool(_explicit: Path | None, name: str) -> Path:
+        if name == "siril-cli":
+            return siril
+        raise EXPORT_DNG.DngExportError("tool_missing", "dnglab unavailable")
+
+    def fake_tif_export(
+        _siril: Path,
+        _root: Path,
+        _fit: Path,
+        tif_path: Path,
+    ) -> Path:
+        tif_path.write_bytes(b"II*\x00")
+        return tif_path
+
+    monkeypatch.setattr(EXPORT_DNG, "_find_tool", resolve_tool)
+    monkeypatch.setattr(EXPORT_DNG, "_run_siril_tif", fake_tif_export)
+
+    outputs = EXPORT_DNG.export_dng_sidecars(tmp_path)
+
+    assert outputs == (tmp_path / "result.tif",)
+    assert (tmp_path / "result.tif").read_bytes() == b"II*\x00"
+
+
 def test_siril_runner_writes_failed_report_when_script_is_missing(
     tmp_path: Path,
 ) -> None:
@@ -79,4 +110,4 @@ def test_siril_runner_writes_failed_report_when_script_is_missing(
         RUN_SIRIL.main(tmp_path / "missing.ssf", tmp_path)
 
     assert caught.value.exit_code == EXIT_FAILURE
-    assert (tmp_path / "failed-report.md").is_file()
+    assert (tmp_path / "Failed" / "failed-report.md").is_file()

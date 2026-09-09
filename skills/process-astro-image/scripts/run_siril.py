@@ -54,7 +54,7 @@ def run_siril(
     *,
     siril_cli: Path | None = None,
 ) -> tuple[Path, ...]:
-    """Run Siril, then require validated DNG companions for all result FITS."""
+    """Run Siril, then require DNG or TIFF companions for all result FITS."""
     if not script_path.is_file():
         raise SirilExecutionError(2, f"script does not exist: {script_path}")
     if not run_root.is_dir():
@@ -89,7 +89,8 @@ def main(script_path: Path, run_root: Path, siril_cli: Path | None = None) -> No
         typer.echo(f"{error}\nfailed report written: {report}", err=True)
         raise typer.Exit(code=2) from error
     typer.echo(
-        f"Siril run complete; DNG sidecars ready: {', '.join(map(str, outputs))}",
+        "Siril run complete; DNG/TIFF companions ready: "
+        f"{', '.join(map(str, outputs))}",
     )
 
 
