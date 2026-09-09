@@ -15,3 +15,7 @@ Contact sheet 若出現多邊形黑邊、大片空白或明顯背景梯度，先
 `plate_solve_tiles.py` 以 FITS header 的 RA/DEC、250 mm 焦長與 2.9 µm 像素尺寸作為初始值，呼叫 Siril 1.4 的 `platesolve`。它把 WCS 寫到新的 `plate_solved.fit`，不會覆寫 `result_linear.fit`；每個 tile 的完整 Siril log 保存在 `qa/plate-solve-logs/`。
 
 解算成功只表示座標可被辨識。下一步仍須讀取 WCS footprint，確認 tile 的真實重疊、裁切邊界與不同年度的尺度／方向，再允許 mosaic adapter 執行。
+
+## Mosaic dry-run
+
+`prepare_mosaic_run.py` 讀取 `qa/plate-solve.json`，只選擇狀態為「通過」且 tile 名稱含 IRCUT 的 `plate_solved.fit`。它以符號連結建立隔離 `Lights/`，輸出 `mosaic-input.json` 與包含 `register`、`seqapplyreg -framing=max`、`stack` 的 `mosaic-dry-run.ssf`；工具本身不執行 Siril。
