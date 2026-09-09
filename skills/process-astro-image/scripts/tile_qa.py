@@ -39,6 +39,7 @@ _CONVERSION: Final = re.compile(
 _COLUMNS: Final = 5
 _CELL_WIDTH: Final = 260
 _CELL_HEIGHT: Final = 190
+_MACOS_CJK_FONT: Final = Path("/System/Library/Fonts/Hiragino Sans GB.ttc")
 
 
 @dataclass(frozen=True, slots=True)
@@ -171,7 +172,11 @@ def _contact_sheet(tiles: tuple[TileQA, ...], run_root: Path, target: Path) -> N
     rows = max(1, (len(previews) + _COLUMNS - 1) // _COLUMNS)
     sheet = Image.new("RGB", (_COLUMNS * _CELL_WIDTH, rows * _CELL_HEIGHT), "#202124")
     draw = ImageDraw.Draw(sheet)
-    font = ImageFont.load_default()
+    font = (
+        ImageFont.truetype(str(_MACOS_CJK_FONT), 13)
+        if _MACOS_CJK_FONT.is_file()
+        else ImageFont.load_default()
+    )
     for index, (tile, path) in enumerate(previews):
         try:
             with Image.open(path) as source:
@@ -182,7 +187,8 @@ def _contact_sheet(tiles: tuple[TileQA, ...], run_root: Path, target: Path) -> N
                 sheet.paste(image, (x, y))
         except OSError:
             continue
-        label = f"{tile.tile_id} {tile.registration_ratio:.1%} {tile.status}"
+        short_id = tile.tile_id.rsplit("_", 1)[-1]
+        label = f"{short_id} {tile.registration_ratio:.1%} {tile.status}"
         draw.text(
             ((index % _COLUMNS) * _CELL_WIDTH + 6,
              (index // _COLUMNS) * _CELL_HEIGHT + _CELL_HEIGHT - 28),
