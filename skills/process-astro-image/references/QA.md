@@ -9,3 +9,9 @@
 預設註冊率門檻為 80%，只是人工複查排序，不是自動刪除或重跑規則。被 Siril 排除的 frame 屬於品質選擇；只有工具執行失敗、輸出缺漏或 companion 驗證失敗才是 `Failed/failed-report.md` 的工具層級失敗。
 
 Contact sheet 若出現多邊形黑邊、大片空白或明顯背景梯度，先裁切有效重疊區並完成 plate solving，再進行 mosaic；不要在 RC-Astro 中用銳化或降噪掩蓋註冊／覆蓋問題。
+
+## Plate solving
+
+`plate_solve_tiles.py` 以 FITS header 的 RA/DEC、250 mm 焦長與 2.9 µm 像素尺寸作為初始值，呼叫 Siril 1.4 的 `platesolve`。它把 WCS 寫到新的 `plate_solved.fit`，不會覆寫 `result_linear.fit`；每個 tile 的完整 Siril log 保存在 `qa/plate-solve-logs/`。
+
+解算成功只表示座標可被辨識。下一步仍須讀取 WCS footprint，確認 tile 的真實重疊、裁切邊界與不同年度的尺度／方向，再允許 mosaic adapter 執行。
