@@ -18,6 +18,8 @@ Contact sheet 若出現多邊形黑邊、大片空白或明顯背景梯度，先
 
 ## Mosaic dry-run
 
-`prepare_mosaic_run.py` 讀取 `qa/plate-solve.json`，只選擇狀態為「通過」且 tile 名稱含 IRCUT 的 `plate_solved.fit`。它以符號連結建立隔離 `Lights/`，輸出 `mosaic-input.json` 與包含 `register`、`seqapplyreg -framing=max`、`stack` 的 `mosaic-dry-run.ssf`；工具本身不執行 Siril。
+`prepare_mosaic_run.py` 讀取 `qa/plate-solve.json`，只選擇狀態為「通過」且 tile 名稱含 IRCUT 的 `plate_solved.fit`。它以符號連結建立隔離 `Lights/`，輸出 `mosaic-input.json` 與執行前說明；不再把所有 tile 放入同一個 Siril `register` sequence。
+
+`wcs_mosaic.py` 使用 `astropy.wcs` 與 `reproject.reproject_and_coadd`，依所有 tile 的 WCS footprint 建立共同 TAN 網格，再逐 channel 做 bilinear 重投影、共同背景中位數對齊與 overlap background matching。它會產生 `result_wcs_mosaic.fit`、`wcs-mosaic.md`、`qa/wcs-mosaic.json` 與只供審查的 `wcs-mosaic-preview.ssf`。背景／平場梯度仍需人工預覽 QA，不可只看幾何覆蓋率。
 
 `mosaic_qa.py` 會再讀取執行後的 `process/tile_.seq`。若實際註冊數低於門檻，即使 Siril 回傳 0，也會產生中文 `mosaic-qa.md` 與 `Failed/failed-report.md`；這可避免把只有部分 tile 的影像誤當成完整 mosaic。

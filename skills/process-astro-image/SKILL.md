@@ -28,8 +28,9 @@ Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSO
 5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，含混合視野時先用 `scripts/prepare_tile_runs.py` 建立隔離 tile runs，再使用 `scripts/run_siril.py` 逐一執行已審查的 Siril `.ssf`，並自動呼叫 DNG/TIFF companion exporter。任一步驟失敗都必須寫入 `Failed/failed-report.md` 並停止；RC-Astro 仍未開放。
 6. 完成 tile run 後使用 `scripts/tile_qa.py` 產生註冊率摘要、排除 frame 清單與預覽 contact sheet。註冊被排除是品質選擇，不自動視為工具失敗；輸出 companion 缺漏或 QA 工具錯誤仍須寫入 `Failed/failed-report.md`。
 7. Tile QA 通過後，使用 `scripts/plate_solve_tiles.py` 對每個 `result_linear.fit` 做 WCS 解算，輸出獨立的 `plate_solved.fit` 與 `qa/plate-solve.json`；解算只確認座標，不直接代表可合成。解算失敗會保留逐 tile log 並寫入 `Failed/failed-report.md`。
-8. WCS footprint 通過審查後，使用 `scripts/prepare_mosaic_run.py` 建立隔離的 IRCUT mosaic dry-run；它只連結已解算 tile，排除解算失敗與 LP，產生 `mosaic-input.json` 與 `mosaic-dry-run.ssf`，不直接執行 mosaic。
-9. Mosaic 執行後使用 `scripts/mosaic_qa.py` 檢查實際被 Siril 納入的 tile 數與 result FITS companion；即使 Siril exit code 為 0，註冊比例低於門檻仍必須判定為失敗並寫入 `Failed/failed-report.md`。
+8. WCS footprint 通過審查後，使用 `scripts/prepare_mosaic_run.py` 建立隔離的 IRCUT mosaic 輸入；它只連結已解算 tile，排除解算失敗與 LP，產生 `mosaic-input.json`。
+9. 使用 `scripts/wcs_mosaic.py` 逐 tile 讀取 WCS、建立共同天球網格並重投影合成；這一步不依賴 tile 之間直接星點重疊。完成後再用 `wcs-mosaic-preview.ssf` 產生預覽與 stretch 版本。
+10. WCS mosaic 執行後檢查 `wcs-mosaic.md`、有效覆蓋率、接縫／背景與 result FITS companion；任何工具或品質閘門失敗都必須寫入 `Failed/failed-report.md`。
 
 ## Required output
 
@@ -44,8 +45,9 @@ Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSO
 - 警告：FITS header、工具版本、模型與授權等尚未完成的 gate。
 - tile QA：`tile-qa.md`、`qa/tile-qa.json` 與 `qa/contact-sheet.png`；這些是 mosaic 前的審查資料，不代表最終影像已通過科學或美學 QA。
 - plate solving：`plate-solve.md`、`qa/plate-solve.json`、`qa/plate-solve-logs/` 與各 tile 的 `plate_solved.fit`；必須先用 WCS footprint 驗證重疊，再產生 mosaic recipe。
-- mosaic dry-run：`mosaic-input.json`、`mosaic-dry-run.md` 與 `mosaic-dry-run.ssf`；輸入只包含已解算的 IRCUT tile，執行前仍需確認有效裁切範圍、校準資料與背景一致性。
-- mosaic QA：`mosaic-qa.md` 與 `qa/mosaic-qa.json`；品質閘門會區分「工具成功」與「實際納入 tile 不足」。
+- mosaic input：`mosaic-input.json` 與 `mosaic-dry-run.md`；輸入只包含已解算的 IRCUT tile，執行前仍需確認有效裁切範圍、校準資料與背景一致性。
+- WCS mosaic：`result_wcs_mosaic.fit`、`wcs-mosaic.md`、`qa/wcs-mosaic.json` 與 `wcs-mosaic-preview.ssf`；結果以共同天球網格重投影，不以 Siril 的直接星點註冊比例判定覆蓋。
+- mosaic QA：`mosaic-qa.md` 與 `qa/mosaic-qa.json`；若仍執行舊版 Siril recipe，品質閘門會區分「工具成功」與「實際納入 tile 不足」。
 
 後續完整 run 還必須保存校準後、堆疊後、BXT／SXT／NXT 後的中間產物、QA 與 `report.md`；預覽不是科學測量或成功保證。
 

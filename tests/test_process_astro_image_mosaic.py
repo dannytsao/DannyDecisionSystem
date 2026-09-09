@@ -76,3 +76,50 @@ def test_prepare_mosaic_run_rejects_nonempty_output(tmp_path: Path) -> None:
 
     with pytest.raises(MODULE.MosaicPreparationError, match="not empty"):
         MODULE.prepare_mosaic_run(source_root, output_root)
+
+
+def test_wcs_mosaic_manifest_accepts_only_ircuts(tmp_path: Path) -> None:
+    """WCS adapter reads the solved IRCUT manifest without touching inputs."""
+    source = tmp_path / "plate_solved.fit"
+    source.write_bytes(b"FITS")
+    (tmp_path / "mosaic-input.json").write_text(
+        json.dumps(
+            {
+                "filter": "IRCUT",
+                "inputs": [{"tile_id": "tile-01", "source": str(source)}],
+            },
+        ),
+        encoding="utf-8",
+    )
+
+    spec = importlib.util.spec_from_file_location(
+        "wcs_mosaic", SCRIPT_DIR / "wcs_mosaic.py",
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    result = module.read_tile_specs(tmp_path)
+
+    assert result == (module.TileSpec("tile-01", source.resolve()),)
+
+
+def test_wcs_mosaic_manifest_rejects_non_ircuts(tmp_path: Path) -> None:
+    """WCS adapter fails closed when the manifest filter is not IRCUT."""
+    (tmp_path / "mosaic-input.json").write_text(
+        json.dumps({"filter": "LP", "inputs": []}), encoding="utf-8",
+    )
+
+    spec = importlib.util.spec_from_file_location(
+        "wcs_mosaic_invalid", SCRIPT_DIR / "wcs_mosaic.py",
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    with pytest.raises(module.WcsMosaicError, match="IRCUT"):
+        module.read_tile_specs(tmp_path)
