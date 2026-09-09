@@ -19,3 +19,5 @@ Contact sheet 若出現多邊形黑邊、大片空白或明顯背景梯度，先
 ## Mosaic dry-run
 
 `prepare_mosaic_run.py` 讀取 `qa/plate-solve.json`，只選擇狀態為「通過」且 tile 名稱含 IRCUT 的 `plate_solved.fit`。它以符號連結建立隔離 `Lights/`，輸出 `mosaic-input.json` 與包含 `register`、`seqapplyreg -framing=max`、`stack` 的 `mosaic-dry-run.ssf`；工具本身不執行 Siril。
+
+`mosaic_qa.py` 會再讀取執行後的 `process/tile_.seq`。若實際註冊數低於門檻，即使 Siril 回傳 0，也會產生中文 `mosaic-qa.md` 與 `Failed/failed-report.md`；這可避免把只有部分 tile 的影像誤當成完整 mosaic。

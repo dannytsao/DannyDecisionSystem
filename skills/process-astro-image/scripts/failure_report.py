@@ -26,6 +26,7 @@ _OPERATION_NAMES = {
     "tile_qa": "檢查視野分組品質",
     "plate_solve_tiles": "確認各視野座標",
     "prepare_mosaic_run": "準備 IRCUT mosaic 試作",
+    "mosaic_qa": "檢查 mosaic 輸出品質",
 }
 _REASON_NAMES = {
     "has_light_frames": "找不到 Lights（亮場）檔案",
