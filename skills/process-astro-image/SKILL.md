@@ -15,23 +15,24 @@ description: Inspect an astrophotography session and produce a safe, reproducibl
 - 影像目標與意圖，例如自然星場、starless、窄頻或 LRGB。
 - 本機 Siril CLI 與使用者已授權的 RC-Astro CLI。
 
-Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSON，再由 `scripts/generate_siril_script.py` 產生只供審查的 `.ssf`。它會掃描 FITS／RAW 副檔名、依檔名與目錄初步分組、計算 SHA-256，並對 FITS primary header 執行最小必要 gate。執行方式與輸出格式見 [MANIFEST.md](references/MANIFEST.md) 與 [SIRIL.md](references/SIRIL.md)。
+Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSON，再由 `scripts/generate_siril_script.py` 產生只供審查的 `.ssf`。它會掃描 FITS／RAW 副檔名、依檔名與目錄初步分組、計算 SHA-256，並對 FITS primary header 執行最小必要 gate。含多日期或 mosaic 視野時，使用 `scripts/prepare_tile_runs.py` 依 `DATE-OBS`、`FILTER` 與 RA/DEC 建立隔離 tile runs。執行方式與輸出格式見 [MANIFEST.md](references/MANIFEST.md)、[GROUPING.md](references/GROUPING.md) 與 [SIRIL.md](references/SIRIL.md)。
 
 缺少 Lights、出現未知檔案、資料不一致、工具／模型／授權不可用，或未取得使用者核准時，必須回報 `blocked`／`Insufficient evidence`，不可猜測或繼續執行。
 
 ## Process
 
 1. 保持原始 session 唯讀，先建立 manifest 與 checksum。
-2. 檢查檔案類型、初步 frame kind、FITS header 與可重跑的輸入路徑。
+2. 檢查檔案類型、初步 frame kind、FITS header、拍攝日期／視野／濾鏡與可重跑的輸入路徑。
 3. 產生 dry-run recipe：Siril 校準／註冊／堆疊，接著依核准 recipe 使用 RC-Astro BXT／SXT／NXT，最後 QA 與報告；目前只產生 Siril `.ssf`，不執行。
 4. 把需要使用者決定的 recipe、缺漏資料與主要風險列出，等待核准。
-5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，使用 `scripts/run_siril.py` 在隔離 run 目錄執行已審查的 Siril `.ssf`，並自動呼叫 DNG/TIFF companion exporter。任一步驟失敗都必須寫入 `Failed/failed-report.md` 並停止；RC-Astro 仍未開放。
+5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，含混合視野時先用 `scripts/prepare_tile_runs.py` 建立隔離 tile runs，再使用 `scripts/run_siril.py` 逐一執行已審查的 Siril `.ssf`，並自動呼叫 DNG/TIFF companion exporter。任一步驟失敗都必須寫入 `Failed/failed-report.md` 並停止；RC-Astro 仍未開放。
 
 ## Required output
 
 每次 intake 至少產生：
 
 - `manifest`：相對路徑、frame kind、副檔名、大小、SHA-256 與可用的 FITS metadata。
+- `groups.json`：日期、濾鏡、視野 tile 與每組輸入檔案清單；每組可獨立重跑。
 - `preflight`：`ready_for_review` 或 `blocked`，以及 blocking checks。
 - `plan`：步驟、需核准旗標與 `execution_enabled=false`。
 - Siril `.ssf`：絕對路徑、保守的 convert／register／seqapplyreg／stack／preview 命令，供人工檢查。

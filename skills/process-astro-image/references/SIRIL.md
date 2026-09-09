@@ -56,3 +56,5 @@ uv run --script scripts/run_siril.py SCRIPT.ssf RUN_DIR [--siril-cli PATH]
 ```
 
 `register -2pass` 後的 `seqapplyreg` 是必要步驟；它會產生供 `stack` 使用的已對齊序列。BXT／SXT／NXT、calibration mapping、QA 與真正執行留待後續核准的 adapter slice。
+
+若一個資料夾包含多個日期或 mosaic 視野，先執行 `prepare_tile_runs.py`，再對每個 tile 產生與執行獨立 `.ssf`；不要把沒有足夠星點重疊的 tile 放進同一個 `register` sequence。

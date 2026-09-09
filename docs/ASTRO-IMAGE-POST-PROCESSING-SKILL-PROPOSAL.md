@@ -182,6 +182,7 @@ Pilot 通過前，必須證明：
 - Registration result: 10 個 frame 轉換成功，但只有 3/10 成功註冊；其餘 7 個被 Siril 排除。`result.fit`（32-bit FITS）、`result_linear.fit`、`result_autostretched.fit` 與 `result_preview.png` 已產生，因此這是「工具流程成功、影像品質條件式通過」而非完整 10-frame 成功。
 - DNG companions: 使用 DNGLab 0.8.0 將每個 result FITS 經 16-bit PPM 中介轉為 Linear DNG，並以 structure 檢查 `DNGVersion`；`result.dng`、`result_linear.dng`、`result_autostretched.dng` 均已產生。這些是已處理影像的 companion，不宣稱保留原始 Bayer RAW 語義。
 - Companion fallback: 若 DNGLab 不可用或 DNG 驗證失敗，exporter 會改用 Siril `savetif32` 產生同 stem 的 TIFF；只有 DNG 與 TIFF 都失敗時才停止並寫入 `Failed/failed-report.md`。
+- M31 grouped execution: 將 1,150 張混合資料按日期、濾鏡與 RA/DEC tile 拆成 41 個隔離 run 後，註冊成功率由 35.6% 提升至 92.7%（1,066/1,150）；這是分組有效性的實際證據，不代表每個 tile 都已完成獨立 QA。
 - Failure reporting: manifest blocked、recipe generation、Siril non-zero exit，以及 DNG/TIFF export 都失敗時，必須 append-only 寫入 `Failed/failed-report.md`；報告使用簡明中文，受控執行入口為 `scripts/run_siril.py`。
 - Failure diagnosis: `light_.seq` 只為 frame 8–10 寫入 registration transform；FITS header 顯示 frame 7→8 有 3 分 34 秒間隔且 RA/DEC 分組改變。轉換後像素峰值也顯示 frame 1–7 明顯較弱（max 40,188–43,231、>50,000 像素為 0），frame 8–10 則為 max 63,500–65,202、>50,000 像素 22–27 個。證據支持「構圖變化 + 前 7 張星點對比不足」的組合原因；無法僅由現有資料判定是失焦、透光度、追蹤或其他拍攝因素。
 - Visual/quality caveat: 預覽仍呈現明顯雜訊，且目前只有 3 張 frame 進入 stack；不得把它視為 M106 最終成品或 RC-Astro 輸入品質已獲保證。

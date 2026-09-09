@@ -25,9 +25,17 @@ sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 EXPECTED_WIDTH = 2
 EXIT_FAILURE = 2
+EXPECTED_RA = 12.4
+EXPECTED_DEC = 41.1
 
 
-def _fits_bytes(*, width: int = 2, height: int = 2, bitpix: int = -32) -> bytes:
+def _fits_bytes(
+    *,
+    width: int = 2,
+    height: int = 2,
+    bitpix: int = -32,
+    extra_cards: tuple[str, ...] = (),
+) -> bytes:
     """Build the smallest valid primary-image FITS header for a fixture."""
     cards = [
         "SIMPLE  =                    T / conforms to FITS standard",
@@ -37,8 +45,9 @@ def _fits_bytes(*, width: int = 2, height: int = 2, bitpix: int = -32) -> bytes:
         f"NAXIS2  = {height:20d} / axis length",
         "BAYERPAT= 'RGGB    '           / CFA pattern",
         "FILTER  = 'L       '           / filter name",
-        "END",
     ]
+    cards.extend(extra_cards)
+    cards.append("END")
     header = b"".join(card.ljust(80).encode("ascii") for card in cards)
     return header.ljust(2880, b" ") + b"\0" * 16
 
@@ -130,6 +139,26 @@ def test_manifest_ignores_its_generated_json_artifact(tmp_path: Path) -> None:
 
     assert manifest.preflight.status == "ready_for_review"
     assert len(manifest.files) == 1
+
+
+def test_manifest_records_capture_date_and_pointing_metadata(tmp_path: Path) -> None:
+    """Given pointing cards, the manifest preserves them for view grouping."""
+    (tmp_path / "M31_light_001.fit").write_bytes(
+        _fits_bytes(
+            extra_cards=(
+                "DATE-OBS= '2025-10-04T13:16:02.524248'",
+                "RA      =                 12.4",
+                "DEC     =               41.1",
+            ),
+        ),
+    )
+
+    metadata = MODULE.build_manifest(tmp_path).files[0].metadata
+
+    assert metadata is not None
+    assert metadata.date_obs == "2025-10-04T13:16:02.524248"
+    assert metadata.ra_deg == EXPECTED_RA
+    assert metadata.dec_deg == EXPECTED_DEC
 
 
 def test_manifest_cli_writes_failed_report_when_preflight_blocks(

@@ -33,6 +33,9 @@ class FitsMetadata:
     bitpix: int
     bayerpat: str | None
     filter_name: str | None
+    date_obs: str | None = None
+    ra_deg: float | None = None
+    dec_deg: float | None = None
 
 
 def is_fits(path: Path) -> bool:
@@ -84,6 +87,16 @@ def _required_int(values: dict[str, str], key: str, path: Path) -> int:
         raise FitsHeaderError(path, f"{key} is not an integer") from error
 
 
+def _optional_float(values: dict[str, str], key: str, path: Path) -> float | None:
+    raw = values.get(key)
+    if raw is None:
+        return None
+    try:
+        return float(raw)
+    except ValueError as error:
+        raise FitsHeaderError(path, f"{key} is not a number") from error
+
+
 def read_fits_metadata(path: Path) -> FitsMetadata:
     """Parse required primary-image metadata from a FITS file."""
     values = _card_values(_read_cards(path), path)
@@ -100,4 +113,7 @@ def read_fits_metadata(path: Path) -> FitsMetadata:
         bitpix=bitpix,
         bayerpat=values.get("BAYERPAT") or None,
         filter_name=values.get("FILTER") or None,
+        date_obs=values.get("DATE-OBS") or values.get("DATE") or None,
+        ra_deg=_optional_float(values, "RA", path),
+        dec_deg=_optional_float(values, "DEC", path),
     )
