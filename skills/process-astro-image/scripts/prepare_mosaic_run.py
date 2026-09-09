@@ -108,14 +108,14 @@ def _script(output_root: Path) -> str:
             "seqapplyreg tile -interp=lanczos3 -framing=max",
             (
                 "stack r_tile rej winsorized 3 3 -norm=addscale "
-                "-weight=wfwhm -out=../mosaic -32b"
+                "-weight=wfwhm -out=../result_mosaic -32b"
             ),
             "cd ..",
-            "load mosaic",
-            "save mosaic_linear",
+            "load result_mosaic",
+            "save result_mosaic_linear",
             "autostretch",
-            "save mosaic_autostretched",
-            "savepng mosaic_preview",
+            "save result_mosaic_autostretched",
+            "savepng result_mosaic_preview",
             "# Export result*.fit companions with export_dng_sidecars.py after review.",
             "close",
         ),
