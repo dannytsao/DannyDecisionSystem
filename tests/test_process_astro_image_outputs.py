@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import pytest
+import typer
+
 if TYPE_CHECKING:
     from types import ModuleType
 
@@ -28,6 +31,8 @@ def _load(name: str, filename: str) -> ModuleType:
 
 FAILURE_REPORT = _load("failure_report", "failure_report.py")
 EXPORT_DNG = _load("export_dng_sidecars", "export_dng_sidecars.py")
+RUN_SIRIL = _load("run_siril", "run_siril.py")
+EXIT_FAILURE = 2
 
 
 def test_failed_report_is_written_with_stable_failure_fields(tmp_path: Path) -> None:
@@ -64,3 +69,14 @@ def test_dng_sidecar_path_preserves_result_stem(tmp_path: Path) -> None:
     assert EXPORT_DNG.dng_sidecar_path(fit) == (
         tmp_path / "result_autostretched.dng"
     )
+
+
+def test_siril_runner_writes_failed_report_when_script_is_missing(
+    tmp_path: Path,
+) -> None:
+    """Given a missing Siril script, the runner writes a failed report."""
+    with pytest.raises(typer.Exit) as caught:
+        RUN_SIRIL.main(tmp_path / "missing.ssf", tmp_path)
+
+    assert caught.value.exit_code == EXIT_FAILURE
+    assert (tmp_path / "failed-report.md").is_file()

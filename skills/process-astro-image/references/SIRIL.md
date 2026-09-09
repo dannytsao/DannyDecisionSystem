@@ -49,4 +49,10 @@ close
 uv run --script scripts/export_dng_sidecars.py RUN_DIR [--siril-cli PATH] [--dnglab PATH]
 ```
 
+正式受控執行應使用 wrapper，確保 Siril 非零 exit 或 DNG 配對失敗都留下報告：
+
+```text
+uv run --script scripts/run_siril.py SCRIPT.ssf RUN_DIR [--siril-cli PATH]
+```
+
 `register -2pass` 後的 `seqapplyreg` 是必要步驟；它會產生供 `stack` 使用的已對齊序列。BXT／SXT／NXT、calibration mapping、QA 與真正執行留待後續核准的 adapter slice。

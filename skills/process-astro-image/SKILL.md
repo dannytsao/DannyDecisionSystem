@@ -25,7 +25,7 @@ Pilot slice 使用 `scripts/build_manifest.py` 建立輸入清單與 dry-run JSO
 2. 檢查檔案類型、初步 frame kind、FITS header 與可重跑的輸入路徑。
 3. 產生 dry-run recipe：Siril 校準／註冊／堆疊，接著依核准 recipe 使用 RC-Astro BXT／SXT／NXT，最後 QA 與報告；目前只產生 Siril `.ssf`，不執行。
 4. 把需要使用者決定的 recipe、缺漏資料與主要風險列出，等待核准。
-5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，可在隔離 run 目錄人工執行已審查的 Siril `.ssf`，再執行 `scripts/export_dng_sidecars.py` 為每個 `result*.fit` 產生同 stem 的 `.dng`。任一步驟失敗都必須寫入 `failed-report.md` 並停止；RC-Astro 仍未開放。
+5. 本 Skill 目前仍不會自動呼叫工具；取得明確核准後，使用 `scripts/run_siril.py` 在隔離 run 目錄執行已審查的 Siril `.ssf`，並自動呼叫 DNG companion exporter。任一步驟失敗都必須寫入 `failed-report.md` 並停止；RC-Astro 仍未開放。
 
 ## Required output
 
