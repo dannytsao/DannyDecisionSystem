@@ -123,3 +123,39 @@ def test_wcs_mosaic_manifest_rejects_non_ircuts(tmp_path: Path) -> None:
 
     with pytest.raises(module.WcsMosaicError, match="IRCUT"):
         module.read_tile_specs(tmp_path)
+
+
+def test_native_mosaic_generator_uses_astrometric_recipe(tmp_path: Path) -> None:
+    """A solved IRCUT manifest gets a review-only native Siril recipe."""
+    source = tmp_path / "plate_solved.fit"
+    source.write_bytes(b"FITS")
+    lights = tmp_path / "Lights"
+    lights.mkdir()
+    (lights / "tile_0001.fit").symlink_to(source)
+    (tmp_path / "mosaic-input.json").write_text(
+        json.dumps(
+            {
+                "filter": "IRCUT",
+                "inputs": [{"tile_id": "tile-01", "source": str(source)}],
+            },
+        ),
+        encoding="utf-8",
+    )
+
+    spec = importlib.util.spec_from_file_location(
+        "generate_native_mosaic_script",
+        SCRIPT_DIR / "generate_native_mosaic_script.py",
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+
+    result = module.generate_native_mosaic_script(tmp_path)
+
+    script = result.script_path.read_text(encoding="utf-8")
+    assert "seqplatesolve tile_ -force -nocache" in script
+    assert "-maximize -overlap_norm -feather=150" in script
+    assert "execution requires explicit approval" in script
+    assert result.report_path.is_file()

@@ -57,4 +57,6 @@ uv run --script scripts/run_siril.py SCRIPT.ssf RUN_DIR [--siril-cli PATH]
 
 `register -2pass` 後的 `seqapplyreg` 是必要步驟；它會產生供 `stack` 使用的已對齊序列。BXT／SXT／NXT、calibration mapping、QA 與真正執行留待後續核准的 adapter slice。
 
-若一個資料夾包含多個日期或 mosaic 視野，先執行 `prepare_tile_runs.py`，再對每個 tile 產生與執行獨立 `.ssf`。已完成 plate solving 的跨視野合成，應改用 `scripts/wcs_mosaic.py`；不要把沒有足夠星點重疊的 tile 放進同一個 `register` sequence。`prepare_mosaic_run.py` 產生的 `mosaic-dry-run.ssf` 僅保留作為舊流程對照，不是跨視野 mosaic 的正式 recipe。
+若一個資料夾包含多個日期或 mosaic 視野，先執行 `prepare_tile_runs.py`，再對每個 tile 產生與執行獨立 `.ssf`。已完成 plate solving 的跨視野合成，預設仍用 `scripts/wcs_mosaic.py` 作為可稽核基準；不要把沒有足夠星點重疊的 tile 放進同一個 `register` sequence。
+
+若要試用 Siril 原生天文 mosaic，可先執行 `scripts/generate_native_mosaic_script.py RUN_DIR` 產生 review-only `.ssf`，確認後再以 `run_siril.py` 執行。此 recipe 使用 `seqplatesolve -force -nocache`（每張 tile 使用自己的 WCS/視野資訊）、`seqapplyreg -framing=max`，以及 `stack -maximize -overlap_norm -feather=150 -norm=addscale`。`-nocache` 對跨日期／跨視野資料很重要；若省略，Siril 可能只用第一張影像的星表範圍而漏解其他 tile。原生 mosaic 仍必須人工檢查背景接縫，沒有 flat 時不得直接視為最終成品。
