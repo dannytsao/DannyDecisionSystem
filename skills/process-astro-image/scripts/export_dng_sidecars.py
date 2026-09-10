@@ -132,12 +132,12 @@ def _run_siril_tif(
     fit_path: Path,
     tif_path: Path,
 ) -> Path:
-    """Ask Siril for a 32-bit TIFF and return the file it actually wrote."""
+    """Ask Siril for a 16-bit TIFF and return the file it actually wrote."""
     tif_name = tif_path.with_suffix("").relative_to(output_root).as_posix()
     script = (
         "requires 1.4.0\n"
         f"load '{fit_path.name}'\n"
-        f"savetif32 '{tif_name}'\n"
+        f"savetif '{tif_name}'\n"
         "close\n"
     )
     result = subprocess.run(  # noqa: S603 - tool path is explicitly resolved

@@ -102,6 +102,30 @@ def test_tiff_fallback_is_used_when_dnglab_is_unavailable(
     assert (tmp_path / "result.tif").read_bytes() == b"II*\x00"
 
 
+def test_tiff_fallback_requests_lightroom_compatible_16bit_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Given a TIFF fallback, Siril is asked for 16-bit integer TIFF."""
+    captured: dict[str, str] = {}
+
+    def fake_run(*args: object, **kwargs: object) -> object:
+        captured["script"] = str(kwargs["input"])
+        (tmp_path / "result.tif").write_bytes(b"II*\x00")
+        return type("Completed", (), {"returncode": 0, "stderr": "", "stdout": ""})()
+
+    monkeypatch.setattr(EXPORT_DNG.subprocess, "run", fake_run)
+
+    EXPORT_DNG._run_siril_tif(
+        tmp_path / "siril-cli",
+        tmp_path,
+        tmp_path / "result.fit",
+        tmp_path / "result.tif",
+    )
+
+    assert "savetif 'result'" in captured["script"]
+
+
 def test_dng_export_requests_a_large_embedded_preview(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
