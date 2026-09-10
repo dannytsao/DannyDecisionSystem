@@ -101,12 +101,15 @@ def _run_siril_export(
     output_root: Path,
     fit_path: Path,
     ppm_path: Path,
+    preview_path: Path,
 ) -> None:
     ppm_name = ppm_path.with_suffix("").relative_to(output_root).as_posix()
+    preview_name = preview_path.with_suffix("").relative_to(output_root).as_posix()
     script = (
         "requires 1.4.0\n"
         f"load '{fit_path.name}'\n"
         f"savepnm '{ppm_name}'\n"
+        f"savepng '{preview_name}'\n"
         "close\n"
     )
     result = subprocess.run(  # noqa: S603 - tool path is explicitly resolved
@@ -116,9 +119,11 @@ def _run_siril_export(
         check=False,
         text=True,
     )
-    if result.returncode != 0 or not ppm_path.is_file():
+    if result.returncode != 0 or not ppm_path.is_file() or not preview_path.is_file():
         detail = (result.stderr or result.stdout).strip()[-800:]
-        raise DngExportError("siril_export", detail or "Siril did not create PPM")
+        raise DngExportError(
+            "siril_export", detail or "Siril did not create PPM and preview",
+        )
 
 
 def _run_siril_tif(
@@ -152,16 +157,20 @@ def _run_siril_tif(
 
 
 def _run_dnglab(dnglab: Path, ppm_path: Path, dng_path: Path) -> None:
+    """Create a DNG with raw pixels and an embedded preview."""
+    preview_path = ppm_path.with_name("preview.png")
     result = subprocess.run(  # noqa: S603 - tool path is explicitly resolved
         [
             str(dnglab),
             "makedng",
             "--input",
             str(ppm_path),
+            str(preview_path),
             "--output",
             str(dng_path),
             "--map",
             "0:raw",
+            "1:preview",
             "--dng-backward-version",
             "1.4",
         ],
@@ -248,7 +257,10 @@ def _try_export_dng(
             prefix=".dds-dng-", dir=output_root,
         ) as temp_dir:
             ppm_path = Path(temp_dir) / "converted.ppm"
-            _run_siril_export(siril, output_root, fit_path, ppm_path)
+            preview_path = Path(temp_dir) / "preview.png"
+            _run_siril_export(
+                siril, output_root, fit_path, ppm_path, preview_path,
+            )
             _run_dnglab(converter, ppm_path, dng_path)
     except DngExportError as error:
         dng_path.unlink(missing_ok=True)

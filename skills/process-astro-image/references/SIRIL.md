@@ -2,7 +2,7 @@
 
 `generate_siril_script.py` 只產生 `.ssf`，不呼叫 Siril。Siril 的官方文件說明 `.ssf` 可由 GUI 的 `@` 指令或 `siril-cli -s` 執行；本 Skill 不會自動呼叫後者。取得明確核准後，可在新的隔離 run 目錄人工執行已審查腳本，並記錄 exit code、註冊比例與輸出檔。
 
-Siril 的 `save` 命令只寫 FITS；因此每個 `result*.fit` 產生後，必須再執行 `scripts/export_dng_sidecars.py`。該工具優先用 Siril 輸出 16-bit PPM，再用 DNGLab `makedng --map 0:raw` 寫出 Linear DNG，並用 DNGLab structure 檢查 `DNGVersion`。若 DNGLab 不可用或 DNG 驗證失敗，會改用 Siril `savetif32` 產生同 stem 的 TIFF。這些是已處理影像的 companion，不是原始 Bayer RAW；DNG 與 TIFF 都失敗時才會產生 `Failed/failed-report.md`，不會建立假 DNG。
+Siril 的 `save` 命令只寫 FITS；因此每個 `result*.fit` 產生後，必須再執行 `scripts/export_dng_sidecars.py`。該工具會同時用 Siril 輸出 16-bit PPM raw pixels 與 PNG embedded preview，再用 DNGLab `makedng --map 0:raw 1:preview` 寫出 Linear DNG，並用 DNGLab structure 檢查 `DNGVersion`。embedded preview 不可省略，否則部分 Lightroom 版本會把 DNG 視為小於 256×256 而拒絕開啟。若 DNGLab 不可用或 DNG 驗證失敗，會改用 Siril `savetif32` 產生同 stem 的 TIFF。這些是已處理影像的 companion，不是原始 Bayer RAW；DNG 與 TIFF 都失敗時才會產生 `Failed/failed-report.md`，不會建立假 DNG。
 
 官方參考：[Siril scripting](https://siril.readthedocs.io/en/stable/Scripts.html)、[Siril script files](https://siril.readthedocs.io/en/latest/scripts/Script-files.html)、[Siril commands 1.4.4](https://siril.readthedocs.io/en/stable/Commands.html)。
 

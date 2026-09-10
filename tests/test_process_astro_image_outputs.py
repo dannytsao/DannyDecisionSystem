@@ -102,6 +102,35 @@ def test_tiff_fallback_is_used_when_dnglab_is_unavailable(
     assert (tmp_path / "result.tif").read_bytes() == b"II*\x00"
 
 
+def test_dng_export_requests_a_large_embedded_preview(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Given a DNG export, Siril is asked for raw pixels and a preview image."""
+    captured: dict[str, str] = {}
+    ppm = tmp_path / "converted.ppm"
+    preview = tmp_path / "preview.png"
+
+    def fake_run(*args: object, **kwargs: object) -> object:
+        captured["script"] = str(kwargs["input"])
+        ppm.write_bytes(b"P6\n1080 1920\n65535\n")
+        preview.write_bytes(b"PNG")
+        return type("Completed", (), {"returncode": 0, "stderr": "", "stdout": ""})()
+
+    monkeypatch.setattr(EXPORT_DNG.subprocess, "run", fake_run)
+
+    EXPORT_DNG._run_siril_export(
+        tmp_path / "siril-cli",
+        tmp_path,
+        tmp_path / "result.fit",
+        ppm,
+        preview,
+    )
+
+    assert "savepnm" in captured["script"]
+    assert "savepng" in captured["script"]
+
+
 def test_siril_runner_writes_failed_report_when_script_is_missing(
     tmp_path: Path,
 ) -> None:
