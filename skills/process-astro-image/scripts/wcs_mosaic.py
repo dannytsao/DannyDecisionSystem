@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from failure_report import write_failed_report
+from wcs_background import BackgroundModelError, fit_background
 
 if TYPE_CHECKING:
     import numpy as np
@@ -116,21 +117,23 @@ def _coadd_channel(
     from reproject import reproject_interp  # noqa: PLC0415 - optional dependency
     from reproject.mosaicking import reproject_and_coadd  # noqa: PLC0415
 
-    images: list[tuple[NDArray[np.float32], object, float]] = []
+    images: list[tuple[NDArray[np.float32], object, NDArray[np.float32], float]] = []
     for spec, data, wcs, _ in tiles:
         image = np.asarray(
             data if data.ndim == _TWO_DIMENSIONS else data[channel],
             dtype=np.float32,
         )
-        baseline = float(np.nanmedian(image))
-        if not np.isfinite(baseline):
-            reason = f"{spec.tile_id} 找不到有效背景中位數"
-            raise WcsMosaicError(reason)
-        images.append((image, wcs, baseline))
-    target_background = float(np.median([item[2] for item in images]))
+        try:
+            background = fit_background(image)
+        except BackgroundModelError as error:
+            reason = f"{spec.tile_id} 背景模型失敗：{error}"
+            raise WcsMosaicError(reason) from error
+        baseline = float(np.nanmedian(background))
+        images.append((image, wcs, background, baseline))
+    target_background = float(np.median([item[3] for item in images]))
     inputs = [
-        (image - np.float32(baseline) + np.float32(target_background), wcs)
-        for image, wcs, baseline in images
+        (image - background + np.float32(target_background), wcs)
+        for image, wcs, background, _ in images
     ]
     mosaic, footprint = reproject_and_coadd(
         inputs,
@@ -205,11 +208,11 @@ def run_wcs_mosaic(run_root: Path, output_path: Path) -> WcsMosaicResult:
         header["DDSMOS"] = ("WCS_REPROJECT", "DDS mosaic method")
         header["NINPUT"] = (len(specs), "plate-solved tiles")
         header["BUNIT"] = "background-subtracted normalized"
-        header["BGMATCH"] = ("MEDIAN2COMMON", "per-tile to common background")
+        header["BGMATCH"] = ("QUAD2COMMON", "quadratic border sky normalization")
         fits.PrimaryHDU(data=data, header=header).writeto(output_path)
     covered = int(np.count_nonzero(footprint > 0))
     result = WcsMosaicResult(
-        method="WCS reproject + mean coadd",
+        method="WCS reproject + quadratic background normalization + mean coadd",
         input_count=len(specs),
         output_path=str(output_path),
         output_shape=tuple(int(value) for value in data.shape),

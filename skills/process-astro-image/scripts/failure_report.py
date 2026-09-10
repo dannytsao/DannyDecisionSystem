@@ -28,6 +28,7 @@ _OPERATION_NAMES = {
     "prepare_mosaic_run": "準備 IRCUT mosaic 試作",
     "mosaic_qa": "檢查 mosaic 輸出品質",
     "wcs_mosaic": "執行 WCS 重投影 mosaic",
+    "wcs_mosaic_qa": "檢查 WCS mosaic 品質",
 }
 _REASON_NAMES = {
     "has_light_frames": "找不到 Lights（亮場）檔案",
