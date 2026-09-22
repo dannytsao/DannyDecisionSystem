@@ -55,3 +55,19 @@ HOLD if quality is good but savings are unclear. REJECT if high-confidence error
 ## DDS boundary
 
 Code/policy owns deterministic and authority rules. Jev may handle bounded semantic gates. LLMs own open-ended reasoning. Jev must remain a replaceable adapter and never become a required runtime dependency.
+
+## External references
+
+### jev-codex-router
+
+- Repository: https://github.com/0xNatoshi/jev-codex-router
+- Purpose: per-call Codex model and reasoning-effort routing driven by Jev.
+- Relevance to DDS validation:
+  - Uses a compact bounded decision state rather than sending Jev the full executor context.
+  - Implements fail-open fallback and a kill switch.
+  - Logs routing decisions for later calibration.
+  - Supports shadow mode and an all-Sol baseline cohort.
+  - Measures model distribution, latency, cache behavior, token usage and counterfactual cost.
+  - Its published historical ≈60% saving is explicitly a simulation under an older policy, so DDS must not treat that figure as proof of current savings.
+- DDS test mapping: NextAction / ModelRouter, confidence calibration, fallback behavior, shadow-mode measurement and cost counterfactuals.
+- Added for reference: 2026-09-22.
