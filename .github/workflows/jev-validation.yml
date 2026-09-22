@@ -1,0 +1,44 @@
+name: Jev Value Validation
+on:
+  push:
+    branches: [jev-value-validation]
+    paths: ["tests/jev/**","docs/JEV-VALUE-VALIDATION-PLAN.md",".github/workflows/jev-validation.yml"]
+  pull_request:
+    paths: ["tests/jev/**","docs/JEV-VALUE-VALIDATION-PLAN.md",".github/workflows/jev-validation.yml"]
+  workflow_dispatch:
+jobs:
+  offline-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m unittest -v tests/jev/test_harness.py
+      - run: python3 tests/jev/benchmark.py --provider fixture
+      - run: bash tests/validate-regression.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jev-offline-results
+          path: tests/jev/results/
+          if-no-files-found: warn
+  live-jev:
+    if: ${{ secrets.JEV_API_KEY != '' && vars.JEV_API_URL != '' }}
+    runs-on: ubuntu-latest
+    needs: offline-validation
+    env:
+      JEV_API_KEY: ${{ secrets.JEV_API_KEY }}
+      JEV_API_URL: ${{ vars.JEV_API_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 tests/jev/benchmark.py --provider jev
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jev-live-results
+          path: tests/jev/results/
+          if-no-files-found: warn
