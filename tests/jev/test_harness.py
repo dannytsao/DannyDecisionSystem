@@ -18,7 +18,7 @@ class HarnessTests(unittest.TestCase):
             self.assertIn("risk",c)
 
     def test_fixture_acceptance(self):
-        rows,s=benchmark.run_cases("fixture")
+        rows,s,_=benchmark.run_cases("fixture")
         self.assertGreaterEqual(s["direct_accuracy"],.90)
         self.assertGreaterEqual(s["safe_accuracy"],.90)
         self.assertEqual(s["direct_critical_wrong_routes"],0)
@@ -73,7 +73,7 @@ class HarnessTests(unittest.TestCase):
 
     # S10: metrics required to compare provider quality vs safe DDS behavior.
     def test_s10_total_task_metrics_schema(self):
-        _,s=benchmark.run_cases("fixture")
+        _,s,_=benchmark.run_cases("fixture")
         required={"direct_accuracy","safe_accuracy","high_confidence_direct_accuracy",
                   "direct_critical_wrong_routes","safe_critical_wrong_routes",
                   "fallback_count","fallback_rate","provider_errors"}
