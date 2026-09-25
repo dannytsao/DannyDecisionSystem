@@ -2,15 +2,13 @@ name: Jev Value Validation
 
 on:
   push:
-    branches:
-      - jev-value-validation
+    branches: [jev-value-validation]
     paths:
       - "tests/jev/**"
       - "docs/JEV-VALUE-VALIDATION-PLAN.md"
       - ".github/workflows/jev-validation.yml"
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - "tests/jev/**"
       - "docs/JEV-VALUE-VALIDATION-PLAN.md"
@@ -28,7 +26,12 @@ jobs:
       - name: Install CI dependencies
         run: sudo apt-get update && sudo apt-get install -y ripgrep
       - run: python3 -m unittest -v tests/jev/test_harness.py
-      - run: python3 tests/jev/benchmark.py --provider fixture
+      - name: Golden fixture benchmark
+        run: python3 tests/jev/benchmark.py --provider fixture --dataset golden
+      - name: Historical fixture benchmark with language slices
+        run: python3 tests/jev/benchmark.py --provider fixture --dataset historical
+      - name: Four-way benchmark contract
+        run: python3 tests/jev/benchmark.py --dataset historical --four-way
       - run: bash tests/validate-regression.sh
       - uses: actions/upload-artifact@v4
         if: always()
@@ -48,7 +51,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python3 tests/jev/benchmark.py --provider jev
+      - run: pip install typesafe-sdk
+      - run: python3 tests/jev/benchmark.py --provider jev --dataset golden
+      - run: python3 tests/jev/benchmark.py --provider jev --dataset historical
       - uses: actions/upload-artifact@v4
         if: always()
         with:
