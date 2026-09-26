@@ -4,7 +4,8 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
-import benchmark\nimport four_way
+import benchmark
+import four_way
 
 def case(case_id):
     return next(c for c in benchmark.load_cases() if c["id"] == case_id)
