@@ -1,0 +1,476 @@
+[
+  {
+    "id": "H01",
+    "gate": "completion",
+    "state": "A repository comparison has enough evidence to answer the user's stated question; another search would only repeat known facts.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "FINISH",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H02",
+    "gate": "completion",
+    "state": "A dependency version is unknown and could change whether the proposed integration works.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H03",
+    "gate": "complexity",
+    "state": "Compare two already-reviewed CLI wrappers using compatibility and maintenance criteria.",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "FAST_PATH",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H04",
+    "gate": "complexity",
+    "state": "Design fallback, observability, adapters, tests, and rollout for a new DDS runtime gate.",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "DEEP_REASONING",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H05",
+    "gate": "adoption",
+    "state": "The tool overlaps existing DDS functions and adds a daemon plus persistent configuration with no unique capability.",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "DO_NOT_INSTALL",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H06",
+    "gate": "adoption",
+    "state": "The tool looks useful but has not been tested on the target Mac environment.",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "SANDBOX_FIRST",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H07",
+    "gate": "build",
+    "state": "Reusable decision instructions require no UI, database, or standalone service.",
+    "options": [
+      "BUILD_APP",
+      "SKILL_FIRST"
+    ],
+    "expected": "SKILL_FIRST",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H08",
+    "gate": "evidence",
+    "state": "The user asks for the current state of a GitHub project and the repository has not been checked yet.",
+    "options": [
+      "SEARCH",
+      "NO_SEARCH"
+    ],
+    "expected": "SEARCH",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H09",
+    "gate": "completion",
+    "state": "CI is green and all requested validation outputs are present; no unresolved blocker remains.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "FINISH",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H10",
+    "gate": "completion",
+    "state": "CI failed on an actionable missing dependency that can be fixed within the authorized branch.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "en",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H11",
+    "gate": "completion",
+    "state": "已經找到 CI runner 缺少 ripgrep，而且使用者已授權在 validation branch 自行修復。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "zh-TW",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H12",
+    "gate": "completion",
+    "state": "需求已回答完整，繼續搜尋只會重複相同資訊，沒有新的決策價值。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "FINISH",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H13",
+    "gate": "evidence",
+    "state": "使用者要求查詢目前 PR 狀態，但尚未讀取 GitHub 最新資料。",
+    "options": [
+      "SEARCH",
+      "NO_SEARCH"
+    ],
+    "expected": "SEARCH",
+    "language": "zh-TW",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H14",
+    "gate": "adoption",
+    "state": "新工具功能與 DDS 高度重疊，又增加常駐服務與維護成本，沒有獨特價值。",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "DO_NOT_INSTALL",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H15",
+    "gate": "adoption",
+    "state": "工具看起來有價值，但尚未在 Mac mini 驗證相容性與風險。",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "SANDBOX_FIRST",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H16",
+    "gate": "complexity",
+    "state": "只需要比較兩個已經了解的工具，不涉及架構或多步驗證。",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "FAST_PATH",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H17",
+    "gate": "complexity",
+    "state": "需要設計 DDS 多層 fallback、觀測性、成本指標與 rollout 計畫。",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "DEEP_REASONING",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H18",
+    "gate": "build",
+    "state": "能力本質是可重用指令、判斷規則與 workflow，不需要獨立 UI。",
+    "options": [
+      "BUILD_APP",
+      "SKILL_FIRST"
+    ],
+    "expected": "SKILL_FIRST",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H19",
+    "gate": "completion",
+    "state": "測試程式改了 metrics schema，但舊 harness 尚未同步，CI 因 KeyError 失敗。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "zh-TW",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H20",
+    "gate": "completion",
+    "state": "修正 harness 後 CI、fixture benchmark 與 DDS regression 全部通過。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "FINISH",
+    "language": "zh-TW",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H21",
+    "gate": "completion",
+    "state": "CI blocker 已定位為 missing dependency；fix 很小、可逆，而且 production 不受影響。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "mixed",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H22",
+    "gate": "complexity",
+    "state": "Task 只是確認 latest workflow run 是否 green，不需要 architecture reasoning。",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "FAST_PATH",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H23",
+    "gate": "complexity",
+    "state": "需要比較 Baseline / Cheap LLM / Jev / Hybrid，包含 calibration、cost、failure taxonomy。",
+    "options": [
+      "FAST_PATH",
+      "DEEP_REASONING"
+    ],
+    "expected": "DEEP_REASONING",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H24",
+    "gate": "evidence",
+    "state": "User asks status；如果不 fetch GitHub 就無法知道最新 CI 結果。",
+    "options": [
+      "SEARCH",
+      "NO_SEARCH"
+    ],
+    "expected": "SEARCH",
+    "language": "mixed",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H25",
+    "gate": "adoption",
+    "state": "Repo promising，但 operational risk 尚未 verified locally。",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "SANDBOX_FIRST",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H26",
+    "gate": "adoption",
+    "state": "Repo duplicates existing capability，且新增 dependency，沒有 measurable unique value。",
+    "options": [
+      "INSTALL",
+      "SANDBOX_FIRST",
+      "DO_NOT_INSTALL"
+    ],
+    "expected": "DO_NOT_INSTALL",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H27",
+    "gate": "build",
+    "state": "Capability 主要是 reusable workflow + decision logic，沒有 persistent runtime requirement。",
+    "options": [
+      "BUILD_APP",
+      "SKILL_FIRST"
+    ],
+    "expected": "SKILL_FIRST",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H28",
+    "gate": "completion",
+    "state": "Direct metric 與 safe fallback metric 已分離，但 historical dataset 尚未建立。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "mixed",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H29",
+    "gate": "completion",
+    "state": "Requested S04-S10 tests and historical dataset are both committed and CI passes.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "FINISH",
+    "language": "mixed",
+    "source_type": "synthetic-control",
+    "risk": "medium"
+  },
+  {
+    "id": "H30",
+    "gate": "governance",
+    "state": "Proposal adds logs and state transitions but does not improve reliability, decisions, or debugging.",
+    "options": [
+      "ACCEPT",
+      "REJECT_COMPLEXITY"
+    ],
+    "expected": "REJECT_COMPLEXITY",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H31",
+    "gate": "governance",
+    "state": "新增一層設定與 log，但無法改善判斷、可靠性或除錯成果。",
+    "options": [
+      "ACCEPT",
+      "REJECT_COMPLEXITY"
+    ],
+    "expected": "REJECT_COMPLEXITY",
+    "language": "zh-TW",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H32",
+    "gate": "governance",
+    "state": "Extra config + states increase maintenance burden without measurable decision value。",
+    "options": [
+      "ACCEPT",
+      "REJECT_COMPLEXITY"
+    ],
+    "expected": "REJECT_COMPLEXITY",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H33",
+    "gate": "completion",
+    "state": "A live provider has not been calibrated on Traditional Chinese, so production trust thresholds are not justified.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H34",
+    "gate": "completion",
+    "state": "Live Jev 尚未跑，因此不能宣稱 Jev accuracy、latency 或 cost 已被驗證。",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "zh-TW",
+    "source_type": "observed",
+    "risk": "medium"
+  },
+  {
+    "id": "H35",
+    "gate": "completion",
+    "state": "Offline infrastructure is stable, but 4-way value comparison has not been executed yet.",
+    "options": [
+      "FINISH",
+      "CONTINUE"
+    ],
+    "expected": "CONTINUE",
+    "language": "mixed",
+    "source_type": "retrospective",
+    "risk": "medium"
+  },
+  {
+    "id": "H36",
+    "gate": "evidence",
+    "state": "A software SDK integration depends on its current public API contract; verify official documentation before coding.",
+    "options": [
+      "SEARCH",
+      "NO_SEARCH"
+    ],
+    "expected": "SEARCH",
+    "language": "en",
+    "source_type": "retrospective",
+    "risk": "medium"
+  }
+]
