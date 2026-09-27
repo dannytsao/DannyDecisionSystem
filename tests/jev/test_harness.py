@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 import benchmark
 import four_way
+import dds_policy_adapter
 
 def case(case_id):
     return next(c for c in benchmark.load_cases() if c["id"] == case_id)
@@ -29,19 +30,20 @@ class HarnessTests(unittest.TestCase):
     def test_timeout_fallback(self):
         c=case("T01")
         r=benchmark.evaluate_case(c,lambda _: (_ for _ in ()).throw(TimeoutError("timeout")))
-        self.assertFalse(r["direct_passed"]); self.assertTrue(r["safe_passed"])
+        self.assertFalse(r["direct_passed"]); self.assertFalse(r["safe_passed"])
+        self.assertIsNone(r["safe_decision"])
         self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"provider_error")
 
     def test_invalid_response_fallback(self):
         c=case("T01")
         r=benchmark.evaluate_case(c,lambda _: {"decision":"BOGUS","confidence":.99})
-        self.assertFalse(r["direct_passed"]); self.assertTrue(r["safe_passed"])
+        self.assertFalse(r["direct_passed"]); self.assertFalse(r["safe_passed"])
         self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"invalid_decision")
 
     def test_low_confidence_fallback(self):
         c=case("T01")
         r=benchmark.evaluate_case(c,lambda _: {"decision":c["expected"],"confidence":.5})
-        self.assertTrue(r["direct_passed"]); self.assertTrue(r["safe_passed"])
+        self.assertTrue(r["direct_passed"]); self.assertFalse(r["safe_passed"])
         self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"low_or_missing_confidence")
 
     # S04/S05: deterministic DDS authority/evidence policy must not be delegated.
@@ -90,6 +92,24 @@ class HarnessTests(unittest.TestCase):
             self.assertIn("source_type",c)
             languages.add(c["language"])
         self.assertEqual(languages,{"en","zh-TW","mixed"})
+
+    def test_policy_adapter_abstains_without_explicit_facts(self):
+        self.assertIsNone(dds_policy_adapter.decide(case("T02"))["decision"])
+        for case_id,answer in (("T11","HUMAN_APPROVAL"),("T12","SEARCH")):
+            c=case(case_id)
+            self.assertEqual(dds_policy_adapter.decide(c)["decision"],answer)
+            c={**c,"expected":"wrong label"}
+            self.assertEqual(dds_policy_adapter.decide(c)["decision"],answer)
+
+    def test_adapter_never_receives_expected_or_risk(self):
+        import sys
+        cases=[case("T11")]
+        command=f"{sys.executable} -c 'import sys,json; d=json.loads(sys.stdin.readline()); assert \"expected\" not in d and \"risk\" not in d; print(json.dumps({{\"decision\":None}}))'"
+        outputs,_=four_way.run_command(command,cases)
+        self.assertIsNone(outputs[0]["decision"])
+        _,metrics,_=four_way.score(cases,outputs,0)
+        self.assertIsNone(metrics["accuracy"])
+        self.assertEqual(metrics["decision_coverage"],0)
 
 if __name__=="__main__":
     unittest.main()

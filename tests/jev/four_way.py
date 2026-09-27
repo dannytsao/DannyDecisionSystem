@@ -18,13 +18,18 @@ def load_cases(dataset):
 
 def run_command(command,cases):
     started=time.perf_counter()
-    p=subprocess.run(shlex.split(command),input="\n".join(json.dumps(c) for c in cases)+"\n",
+    # Labels and retrospective metadata belong to the scorer, never the adapter.
+    inputs=[{k:c[k] for k in ("id","gate","state","options","policy_facts") if k in c} for c in cases]
+    p=subprocess.run(shlex.split(command),input="\n".join(json.dumps(c) for c in inputs)+"\n",
                      text=True,capture_output=True,timeout=300)
     if p.returncode:
         raise RuntimeError(f"adapter failed ({p.returncode}): {p.stderr[-1000:]}")
     rows=[json.loads(line) for line in p.stdout.splitlines() if line.strip()]
     if len(rows)!=len(cases):
         raise RuntimeError(f"adapter returned {len(rows)} rows for {len(cases)} cases")
+    for case,row in zip(cases,rows):
+        if not isinstance(row,dict) or row.get("decision") not in (None,*case["options"]):
+            raise RuntimeError(f"adapter returned invalid decision for {case['id']}")
     elapsed=(time.perf_counter()-started)*1000
     return rows,elapsed
 
@@ -39,7 +44,10 @@ def score(cases,outputs,elapsed_ms):
             if isinstance(v,(int,float)): totals[m]+=v; known[m]+=1
         rows.append(row)
     n=len(rows)
-    metrics={"cases":n,"accuracy":sum(r["passed"] for r in rows)/n if n else 0,
+    resolved=sum(r["decision"] is not None for r in rows)
+    metrics={"cases":n,"resolved_cases":resolved,"decision_coverage":resolved/n if n else 0,
+             "accuracy":sum(r["passed"] for r in rows)/n if resolved==n and n else None,
+             "resolved_accuracy":sum(r["passed"] for r in rows)/resolved if resolved else None,
              "critical_wrong_routes":sum((not r["passed"]) and c.get("risk")=="critical" for r,c in zip(rows,cases)),
              "wall_latency_ms":elapsed_ms}
     for m in METRICS:
@@ -49,7 +57,10 @@ def score(cases,outputs,elapsed_ms):
     slices={}
     for lang in sorted({c.get("language") for c in cases if c.get("language")}):
         subset=[r for r in rows if r["language"]==lang]
-        slices[lang]={"cases":len(subset),"accuracy":sum(r["passed"] for r in subset)/len(subset)}
+        answered=[r for r in subset if r["decision"] is not None]
+        slices[lang]={"cases":len(subset),"resolved_cases":len(answered),
+                      "accuracy":sum(r["passed"] for r in subset)/len(subset) if len(answered)==len(subset) else None,
+                      "resolved_accuracy":sum(r["passed"] for r in answered)/len(answered) if answered else None}
     return rows,metrics,slices
 
 def main():
@@ -66,7 +77,8 @@ def main():
     cases=load_cases(args.dataset)
     outputs,elapsed=run_command(command,cases)
     rows,metrics,slices=score(cases,outputs,elapsed)
-    payload={"arm":args.arm,"dataset":args.dataset,"status":"measured",
+    payload={"arm":args.arm,"dataset":args.dataset,
+             "status":"measured" if metrics["decision_coverage"]==1 else "partial_coverage",
              "metrics":metrics,"language_slices":slices,"results":rows}
     out=ROOT/"results"; out.mkdir(exist_ok=True)
     (out/f"four-way-{args.arm}-{args.dataset}.json").write_text(json.dumps(payload,indent=2)+"\n")

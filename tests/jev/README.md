@@ -2,6 +2,29 @@
 
 Status: Shadow-mode benchmark scaffold. It does not change production DDS routing.
 
+## Baseline boundary
+
+This repository specifies DDS policy in Markdown but does not contain a callable
+DDS Runtime decision implementation. `dds_policy_adapter.py` executes only
+explicit hard-rule facts for approval and fresh evidence; all other cases
+abstain. It is a **partial policy diagnostic**, not a measured full DDS baseline.
+It never reads `expected`. The four-way runner sends only decision inputs to
+adapters and reports decision coverage; accuracy is `null` for incomplete arms.
+
+```bash
+python3 tests/jev/four_way.py --dataset golden --arm dds_baseline \
+  --command "python3 tests/jev/dds_policy_adapter.py"
+```
+
+For a real baseline, provide a command that executes the DDS Runtime and emits
+one JSON row per input row. Configure it with `FOURWAY_DDS_BASELINE_CMD` or
+`--command`. The two explicit `policy_facts` in the golden dataset describe
+input state, not target labels. Add equivalent facts only from source evidence,
+without consulting the expected outcome.
+
+The live Jev fallback currently abstains when no DDS Runtime is connected.
+An unresolved fallback fails the safety gate; fixture success is not evidence.
+
 ## Purpose
 
 Test whether Jev adds measurable value specifically in the gap between deterministic DDS rules and expensive open-ended LLM reasoning.
@@ -20,13 +43,13 @@ Hard rules such as irreversible-action approval remain DDS policy and are includ
 python3 tests/jev/benchmark.py --provider fixture
 ```
 
-For a live Jev run, set `JEV_API_KEY` and configure the endpoint/response adapter only after checking the current Jev API contract:
+For a live Jev run, configure `TYPESAFE_API_KEY` and the official SDK:
 
 ```bash
 python3 tests/jev/benchmark.py --provider jev
 ```
 
-The live provider is intentionally fail-closed until its current API endpoint and response schema are configured. No production DDS path depends on it.
+Live CI remains disabled until the credentials and a real fallback path are ready. No production DDS path depends on it.
 
 ## Acceptance gate
 

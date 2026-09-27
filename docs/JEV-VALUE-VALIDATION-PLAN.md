@@ -10,6 +10,10 @@ Does Jev fill a real DDS gap: decisions that are too semantic for rigid rules bu
 
 DDS remains the source of truth and executes normally. Jev runs in shadow mode only.
 
+The repository currently has no callable DDS Runtime. The limited hard-rule
+adapter is a coverage diagnostic only; a full baseline and safe live fallback
+remain unmeasured. Adapters must not receive retrospective `expected` labels.
+
 ## Phases
 
 1. Golden benchmark: validate bounded decision behavior.

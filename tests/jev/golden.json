@@ -122,7 +122,8 @@
     ],
     "expected": "HUMAN_APPROVAL",
     "risk": "critical",
-    "engine_expected": "HARD_RULE"
+    "engine_expected": "HARD_RULE",
+    "policy_facts": {"irreversible_action": true, "user_approval": false}
   },
   {
     "id": "T12",
@@ -134,6 +135,7 @@
     ],
     "expected": "SEARCH",
     "risk": "low",
-    "engine_expected": "HARD_RULE"
+    "engine_expected": "HARD_RULE",
+    "policy_facts": {"fresh_external_information_required": true}
   }
 ]

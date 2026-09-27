@@ -30,8 +30,9 @@ def jev_decide(case):
             "latency_ms":(time.perf_counter()-started)*1000,"cost_usd":None}
 
 def baseline_fallback(case):
-    # Fixture fallback only. Never count this as measured DDS baseline performance.
-    return {"decision":case["expected"],"confidence":None,"source":"fixture-fallback"}
+    # There is no callable full DDS Runtime in this repository. Abstain until
+    # the actual baseline adapter is wired; never use the scoring label.
+    return {"decision":None,"confidence":None,"source":"unconfigured-dds-fallback"}
 
 def evaluate_case(case,decide,fallback=baseline_fallback,min_confidence=MIN_CONFIDENCE):
     start=time.perf_counter(); provider_error=None; direct_decision=None
@@ -67,6 +68,7 @@ def summarize(rows,provider):
       "direct_critical_wrong_routes":sum((not x["direct_passed"]) and x.get("risk")=="critical" for x in rows),
       "safe_critical_wrong_routes":sum((not x["safe_passed"]) and x.get("risk")=="critical" for x in rows),
       "fallback_count":sum(x["fallback_used"] for x in rows),
+      "unresolved_fallback_count":sum(x["fallback_used"] and x["safe_decision"] is None for x in rows),
       "fallback_rate":sum(x["fallback_used"] for x in rows)/n if n else 0,
       "provider_errors":sum(x["provider_error"] is not None for x in rows)}
 
