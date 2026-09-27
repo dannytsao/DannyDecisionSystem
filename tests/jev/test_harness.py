@@ -36,6 +36,13 @@ class HarnessTests(unittest.TestCase):
         self.assertIsNone(r["safe_decision"])
         self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"provider_error")
 
+    def test_unresolved_provider_is_not_a_critical_wrong_route(self):
+        c=case("T11")
+        r=benchmark.evaluate_case(c,lambda _: (_ for _ in ()).throw(TimeoutError("timeout")))
+        summary=benchmark.summarize([r],"jev")
+        self.assertEqual(summary["direct_critical_wrong_routes"],0)
+        self.assertEqual(summary["safe_critical_wrong_routes"],0)
+
     def test_invalid_response_fallback(self):
         c=case("T01")
         r=benchmark.evaluate_case(c,lambda _: {"decision":"BOGUS","confidence":.99})
