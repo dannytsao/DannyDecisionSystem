@@ -66,3 +66,57 @@ jobs:
           name: jev-live-results
           path: tests/jev/results/
           if-no-files-found: warn
+
+  live-cheap-llm:
+    if: ${{ vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    needs: offline-validation
+    env:
+      CHEAP_LLM_PROVIDER_CMD: ${{ vars.CHEAP_LLM_PROVIDER_CMD }}
+      CHEAP_LLM_API_URL: ${{ vars.CHEAP_LLM_API_URL }}
+      CHEAP_LLM_API_KEY: ${{ secrets.CHEAP_LLM_API_KEY }}
+      CHEAP_LLM_MODEL: ${{ vars.CHEAP_LLM_MODEL }}
+      CHEAP_LLM_INPUT_USD_PER_MILLION: ${{ vars.CHEAP_LLM_INPUT_USD_PER_MILLION }}
+      CHEAP_LLM_OUTPUT_USD_PER_MILLION: ${{ vars.CHEAP_LLM_OUTPUT_USD_PER_MILLION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run measured Cheap LLM adapter
+        run: python3 tests/jev/four_way.py --dataset historical --arm cheap_llm --require-complete --command "python3 tests/jev/cheap_llm_adapter.py"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cheap-llm-live-results
+          path: tests/jev/results/
+          if-no-files-found: warn
+
+  live-hybrid:
+    if: ${{ vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    needs: offline-validation
+    env:
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+      CHEAP_LLM_PROVIDER_CMD: ${{ vars.CHEAP_LLM_PROVIDER_CMD }}
+      CHEAP_LLM_API_URL: ${{ vars.CHEAP_LLM_API_URL }}
+      CHEAP_LLM_API_KEY: ${{ secrets.CHEAP_LLM_API_KEY }}
+      CHEAP_LLM_MODEL: ${{ vars.CHEAP_LLM_MODEL }}
+      CHEAP_LLM_INPUT_USD_PER_MILLION: ${{ vars.CHEAP_LLM_INPUT_USD_PER_MILLION }}
+      CHEAP_LLM_OUTPUT_USD_PER_MILLION: ${{ vars.CHEAP_LLM_OUTPUT_USD_PER_MILLION }}
+      HYBRID_JEV_CMD: python3 tests/jev/jev_adapter.py
+      HYBRID_LLM_CMD: python3 tests/jev/cheap_llm_adapter.py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install typesafe-sdk
+      - name: Run measured Hybrid adapter
+        run: python3 tests/jev/four_way.py --dataset historical --arm hybrid --require-complete --command "python3 tests/jev/hybrid_adapter.py"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hybrid-live-results
+          path: tests/jev/results/
+          if-no-files-found: warn

@@ -63,11 +63,15 @@ def score(cases,outputs,elapsed_ms):
                       "resolved_accuracy":sum(r["passed"] for r in answered)/len(answered) if answered else None}
     return rows,metrics,slices
 
+def is_complete(metrics):
+    return metrics["decision_coverage"] == 1
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--dataset",choices=["golden","historical"],default="historical")
     ap.add_argument("--arm",choices=ARMS,required=True)
     ap.add_argument("--command",help="Adapter command; otherwise FOURWAY_<ARM>_CMD is used")
+    ap.add_argument("--require-complete",action="store_true")
     args=ap.parse_args()
     command=args.command or os.getenv(f"FOURWAY_{args.arm.upper()}_CMD")
     if not command:
@@ -78,11 +82,11 @@ def main():
     outputs,elapsed=run_command(command,cases)
     rows,metrics,slices=score(cases,outputs,elapsed)
     payload={"arm":args.arm,"dataset":args.dataset,
-             "status":"measured" if metrics["decision_coverage"]==1 else "partial_coverage",
+             "status":"measured" if is_complete(metrics) else "partial_coverage",
              "metrics":metrics,"language_slices":slices,"results":rows}
     out=ROOT/"results"; out.mkdir(exist_ok=True)
     (out/f"four-way-{args.arm}-{args.dataset}.json").write_text(json.dumps(payload,indent=2)+"\n")
     print(json.dumps({"arm":args.arm,"dataset":args.dataset,"metrics":metrics,"language_slices":slices},indent=2))
-    return 0
+    return 0 if not args.require_complete or is_complete(metrics) else 1
 
 if __name__=="__main__": raise SystemExit(main())

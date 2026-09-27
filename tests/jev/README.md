@@ -48,6 +48,55 @@ python3 tests/jev/four_way.py --dataset historical --arm cheap_llm \
   --command "python3 tests/jev/cheap_llm_adapter.py"
 ```
 
+## Configure measured GitHub Hybrid runs
+
+The workflow reads one provider route at a time. The recommended route is an
+OpenAI-compatible endpoint:
+
+```bash
+gh secret set CHEAP_LLM_API_KEY --repo dannytsao/DannyDecisionSystem
+gh variable set CHEAP_LLM_API_URL --repo dannytsao/DannyDecisionSystem \
+  --body "<provider chat-completions URL>"
+gh variable set CHEAP_LLM_MODEL --repo dannytsao/DannyDecisionSystem \
+  --body "<provider model identifier>"
+gh variable set CHEAP_LLM_LIVE_ENABLED --repo dannytsao/DannyDecisionSystem \
+  --body "true"
+```
+
+Use the exact endpoint and model identifier documented by the provider. Keep
+the API key in the secret, never in a repository variable. Optional
+`CHEAP_LLM_INPUT_USD_PER_MILLION` and
+`CHEAP_LLM_OUTPUT_USD_PER_MILLION` variables may be set only to provider-published
+rates; leave them unset when either rate or token usage is unavailable.
+
+The command-provider route is for a checked-in or runner-installed executable
+that reads one sanitized JSON object from stdin and writes one JSON decision
+object to stdout:
+
+```bash
+gh variable set CHEAP_LLM_PROVIDER_CMD --repo dannytsao/DannyDecisionSystem \
+  --body "python3 path/to/provider_adapter.py"
+gh variable set CHEAP_LLM_LIVE_ENABLED --repo dannytsao/DannyDecisionSystem \
+  --body "true"
+```
+
+Do not set `CHEAP_LLM_PROVIDER_CMD` when using the HTTP route. After either
+route is configured, trigger the validation workflow on the validation branch:
+
+```bash
+gh workflow run jev-validation.yml \
+  --repo dannytsao/DannyDecisionSystem --ref jev-value-validation
+gh run list --repo dannytsao/DannyDecisionSystem \
+  --workflow jev-validation.yml --limit 3
+gh run watch <run-id> --repo dannytsao/DannyDecisionSystem
+```
+
+The `live-cheap-llm` and `live-hybrid` jobs are gated by both
+`JEV_LIVE_ENABLED=true` and `CHEAP_LLM_LIVE_ENABLED=true`. They upload measured
+historical EN, zh-TW, and mixed results. The existing `live-jev` job may still
+remain red while DDS baseline fallback is unresolved; that is evidence for a
+HOLD, not a provider-cost or accuracy result to be hidden.
+
 ## Purpose
 
 Test whether Jev adds measurable value specifically in the gap between deterministic DDS rules and expensive open-ended LLM reasoning.

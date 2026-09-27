@@ -9,6 +9,7 @@ import four_way
 import dds_policy_adapter
 import hybrid_adapter
 import cheap_llm_adapter
+import jev_adapter
 
 def case(case_id):
     return next(c for c in benchmark.load_cases() if c["id"] == case_id)
@@ -124,6 +125,7 @@ class HarnessTests(unittest.TestCase):
         c=case("T11")
         _,metrics,_=four_way.score([c],[{"decision":None}],0)
         self.assertEqual(metrics["critical_wrong_routes"],0)
+        self.assertFalse(four_way.is_complete(metrics))
 
     def test_hybrid_hard_rule_cannot_be_overridden(self):
         calls=[]
@@ -164,6 +166,13 @@ class HarnessTests(unittest.TestCase):
             cheap_llm_adapter.cost_from_usage(usage,1.0,2.0),
             0.002,
         )
+
+    def test_jev_request_excludes_scoring_metadata(self):
+        c=case("T11")
+        request=jev_adapter.build_request(c)
+        self.assertEqual(set(request),{"id","gate","state","options","policy_facts"})
+        self.assertNotIn("expected",request)
+        self.assertNotIn("risk",request)
 
 if __name__=="__main__":
     unittest.main()
