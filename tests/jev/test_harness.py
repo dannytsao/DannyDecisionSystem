@@ -8,6 +8,7 @@ import benchmark
 import four_way
 import dds_policy_adapter
 import hybrid_adapter
+import cheap_llm_adapter
 
 def case(case_id):
     return next(c for c in benchmark.load_cases() if c["id"] == case_id)
@@ -112,6 +113,11 @@ class HarnessTests(unittest.TestCase):
         self.assertIsNone(metrics["accuracy"])
         self.assertEqual(metrics["decision_coverage"],0)
 
+    def test_unresolved_adapter_is_not_a_wrong_route(self):
+        c=case("T11")
+        _,metrics,_=four_way.score([c],[{"decision":None}],0)
+        self.assertEqual(metrics["critical_wrong_routes"],0)
+
     def test_hybrid_hard_rule_cannot_be_overridden(self):
         calls=[]
         result=hybrid_adapter.decide(case("T11"),
@@ -129,6 +135,28 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(result["decision"],"CONTINUE")
         self.assertEqual(result["route"],"llm_fallback")
         self.assertIsNone(hybrid_adapter.decide(c)["decision"])
+
+    def test_cheap_llm_request_excludes_scoring_metadata(self):
+        c=case("T11")
+        request=cheap_llm_adapter.build_request(c)
+        self.assertEqual(set(request),{"id","gate","state","options","policy_facts"})
+        self.assertNotIn("expected",request)
+        self.assertNotIn("risk",request)
+
+    def test_cheap_llm_unconfigured_provider_abstains(self):
+        c=case("T01")
+        result=cheap_llm_adapter.unconfigured_result(c)
+        self.assertIsNone(result["decision"])
+        self.assertEqual(result["provider"],"unconfigured")
+        self.assertIsNone(result["cost_usd"])
+
+    def test_cheap_llm_usage_cost_requires_declared_rates(self):
+        usage={"prompt_tokens":1000,"completion_tokens":500}
+        self.assertIsNone(cheap_llm_adapter.cost_from_usage(usage,None,None))
+        self.assertEqual(
+            cheap_llm_adapter.cost_from_usage(usage,1.0,2.0),
+            0.002,
+        )
 
 if __name__=="__main__":
     unittest.main()

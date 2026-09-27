@@ -88,9 +88,9 @@ def four_way_scaffold(dataset="historical"):
     cases=load_cases(dataset)
     arms={
       "dds_baseline":{"status":"pending_adapter","required_metrics":["accuracy","latency_ms","llm_calls","tool_calls","retries","pipeline_steps","context_tokens","cost_usd"]},
-      "cheap_llm":{"status":"pending_adapter","required_metrics":["accuracy","latency_ms","llm_calls","tool_calls","retries","pipeline_steps","context_tokens","cost_usd"]},
+      "cheap_llm":{"status":"ready_provider_adapter","required_metrics":["accuracy","latency_ms","llm_calls","tool_calls","retries","pipeline_steps","context_tokens","cost_usd"]},
       "jev":{"status":"ready_live_credentials","required_metrics":["direct_accuracy","safe_accuracy","latency_ms","fallback_rate","provider_errors","cost_usd"]},
-      "hybrid":{"status":"pending_policy_adapter","required_metrics":["accuracy","latency_ms","llm_calls","tool_calls","retries","pipeline_steps","context_tokens","fallback_rate","cost_usd"]}}
+      "hybrid":{"status":"ready_provider_chain","required_metrics":["accuracy","latency_ms","llm_calls","tool_calls","retries","pipeline_steps","context_tokens","fallback_rate","cost_usd"]}}
     return {"dataset":dataset,"cases":len(cases),"arms":arms,
             "comparison_rule":"Do not rank arms until all measured metrics come from executable adapters; no synthetic prices or outcomes."}
 

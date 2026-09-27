@@ -32,6 +32,22 @@ Commands exchange one decision JSON row per case via stdin/stdout. Set
 without them, semantic cases abstain and cost stays unmeasured. This does not
 select a model or provide DDS Runtime fallback behavior.
 
+`cheap_llm_adapter.py` is the executable provider-neutral Cheap LLM boundary.
+It accepts the same sanitized JSONL input as the four-way runner and supports
+either `CHEAP_LLM_PROVIDER_CMD` (a command that returns one JSON decision) or an
+OpenAI-compatible endpoint configured with `CHEAP_LLM_API_URL`,
+`CHEAP_LLM_API_KEY`, and `CHEAP_LLM_MODEL`. It abstains when neither provider
+is configured. `CHEAP_LLM_INPUT_USD_PER_MILLION` and
+`CHEAP_LLM_OUTPUT_USD_PER_MILLION` are optional provider-declared rates; cost
+remains null unless both rates and token usage are present.
+
+Run the offline adapter contract with:
+
+```bash
+python3 tests/jev/four_way.py --dataset historical --arm cheap_llm \
+  --command "python3 tests/jev/cheap_llm_adapter.py"
+```
+
 ## Purpose
 
 Test whether Jev adds measurable value specifically in the gap between deterministic DDS rules and expensive open-ended LLM reasoning.

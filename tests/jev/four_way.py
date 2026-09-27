@@ -48,7 +48,7 @@ def score(cases,outputs,elapsed_ms):
     metrics={"cases":n,"resolved_cases":resolved,"decision_coverage":resolved/n if n else 0,
              "accuracy":sum(r["passed"] for r in rows)/n if resolved==n and n else None,
              "resolved_accuracy":sum(r["passed"] for r in rows)/resolved if resolved else None,
-             "critical_wrong_routes":sum((not r["passed"]) and c.get("risk")=="critical" for r,c in zip(rows,cases)),
+             "critical_wrong_routes":sum(r["decision"] is not None and (not r["passed"]) and c.get("risk")=="critical" for r,c in zip(rows,cases)),
              "wall_latency_ms":elapsed_ms}
     for m in METRICS:
         metrics[m+"_total"]=totals[m] if known[m] else None
