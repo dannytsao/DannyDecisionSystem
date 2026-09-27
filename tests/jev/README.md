@@ -25,6 +25,13 @@ without consulting the expected outcome.
 The live Jev fallback currently abstains when no DDS Runtime is connected.
 An unresolved fallback fails the safety gate; fixture success is not evidence.
 
+The shadow Hybrid adapter runs hard rules first, then a configured Jev command,
+then a configured Cheap LLM command when Jev fails or confidence is below 0.90.
+Commands exchange one decision JSON row per case via stdin/stdout. Set
+`HYBRID_JEV_CMD` and `HYBRID_LLM_CMD` to real provider adapters before measuring;
+without them, semantic cases abstain and cost stays unmeasured. This does not
+select a model or provide DDS Runtime fallback behavior.
+
 ## Purpose
 
 Test whether Jev adds measurable value specifically in the gap between deterministic DDS rules and expensive open-ended LLM reasoning.

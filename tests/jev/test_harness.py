@@ -7,6 +7,7 @@ sys.path.insert(0,str(ROOT))
 import benchmark
 import four_way
 import dds_policy_adapter
+import hybrid_adapter
 
 def case(case_id):
     return next(c for c in benchmark.load_cases() if c["id"] == case_id)
@@ -110,6 +111,24 @@ class HarnessTests(unittest.TestCase):
         _,metrics,_=four_way.score(cases,outputs,0)
         self.assertIsNone(metrics["accuracy"])
         self.assertEqual(metrics["decision_coverage"],0)
+
+    def test_hybrid_hard_rule_cannot_be_overridden(self):
+        calls=[]
+        result=hybrid_adapter.decide(case("T11"),
+            jev=lambda c: calls.append("jev") or {"decision":"EXECUTE","confidence":1},
+            llm=lambda c: calls.append("llm") or {"decision":"EXECUTE"})
+        self.assertEqual(result["decision"],"HUMAN_APPROVAL")
+        self.assertEqual(result["route"],"hard_rule")
+        self.assertEqual(calls,[])
+
+    def test_hybrid_low_confidence_falls_back(self):
+        c=case("T05")
+        result=hybrid_adapter.decide(c,
+            jev=lambda _: {"decision":"FINISH","confidence":.4},
+            llm=lambda _: {"decision":"CONTINUE","cost_usd":None})
+        self.assertEqual(result["decision"],"CONTINUE")
+        self.assertEqual(result["route"],"llm_fallback")
+        self.assertIsNone(hybrid_adapter.decide(c)["decision"])
 
 if __name__=="__main__":
     unittest.main()
