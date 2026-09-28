@@ -128,7 +128,6 @@ class OpenAICompatibleProvider:
     def complete(self, request: Dict[str, Any]) -> Dict[str, Any]:
         body = {
             "model": self._model,
-            "temperature": 0,
             "response_format": {"type": "json_object"},
             "messages": [
                 {

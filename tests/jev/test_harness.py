@@ -184,6 +184,27 @@ class HarnessTests(unittest.TestCase):
         result=cheap_llm_adapter.decide(case("T01"), FailingProvider())
         self.assertEqual(result["provider_error"],"http_400")
 
+    def test_cheap_llm_request_avoids_unsupported_sampling_parameter(self):
+        captured={}
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self):
+                return b'{"choices":[{"message":{"content":"{\\"decision\\":\\"CONTINUE\\"}"}}]}'
+        def fake_urlopen(request, timeout):
+            del timeout
+            captured.update(json.loads(request.data.decode("utf-8")))
+            return Response()
+        original=cheap_llm_adapter.urllib_request.urlopen
+        cheap_llm_adapter.urllib_request.urlopen=fake_urlopen
+        try:
+            cheap_llm_adapter.OpenAICompatibleProvider(
+                "https://api.example.test", "key", "gpt-5-nano", 1
+            ).complete(case("T01"))
+        finally:
+            cheap_llm_adapter.urllib_request.urlopen=original
+        self.assertNotIn("temperature", captured)
+
     def test_jev_request_excludes_scoring_metadata(self):
         c=case("T11")
         request=jev_adapter.build_request(c)
