@@ -195,6 +195,15 @@ def decide(case: Dict[str, Any], provider: Optional[Provider] = None) -> Dict[st
     started = time.perf_counter()
     try:
         payload = selected.complete(request)
+    except urllib_error.HTTPError as exc:
+        return {
+            **unconfigured_result(case),
+            "provider": selected.name,
+            "provider_error": f"http_{exc.code}",
+            "llm_calls": 1,
+            "pipeline_steps": 1,
+            "latency_ms": (time.perf_counter() - started) * 1000,
+        }
     except (OSError, ValueError, subprocess.SubprocessError, TimeoutError, urllib_error.URLError):
         return {
             **unconfigured_result(case),

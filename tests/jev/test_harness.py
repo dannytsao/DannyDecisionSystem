@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json, sys, unittest
 from pathlib import Path
+from urllib.error import HTTPError
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
@@ -173,6 +174,15 @@ class HarnessTests(unittest.TestCase):
             cheap_llm_adapter.cost_from_usage(usage,1.0,2.0),
             0.002,
         )
+
+    def test_cheap_llm_reports_http_status_without_response_body(self):
+        class FailingProvider:
+            name="openai-compatible"
+            def complete(self, request):
+                del request
+                raise HTTPError("https://api.example.test", 400, "bad request", {}, None)
+        result=cheap_llm_adapter.decide(case("T01"), FailingProvider())
+        self.assertEqual(result["provider_error"],"http_400")
 
     def test_jev_request_excludes_scoring_metadata(self):
         c=case("T11")
