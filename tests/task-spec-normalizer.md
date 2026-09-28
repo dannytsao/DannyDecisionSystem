@@ -44,6 +44,36 @@ Observed behavior:
 
 Pilot evidence result: **PASS for this observed case**. It demonstrates the intended behavior for a terse but materially sufficient real-world request. It does not by itself satisfy independent review or the remaining Pilot cases.
 
+## Case 05 — Terse GitHub request resolved from trusted conversation context (observed)
+
+Observed user input:
+
+> 幫我看看這個 https://github.com/MaximeRivest/tiny-classifiers
+
+Trusted current context:
+
+- The immediately preceding Pilot established a recurring task: evaluate a GitHub project for DDS relevance, installation/adoption fit, risks, and whether a separate validation is warranted.
+- The user had explicitly chosen to continue real-world `task-spec-normalizer` Pilot cases.
+
+Observed normalized contract:
+
+- Goal: evaluate `MaximeRivest/tiny-classifiers` for DDS relevance and determine whether it warrants installation/adoption or a bounded Pilot.
+- Success criteria: explain the mechanism; compare it with current DDS decision engines, especially Jev/hard-rule/LLM routing; identify prerequisites and maturity requirements; avoid installing before value is demonstrated.
+- Constraints: do not treat the repository as a DDS dependency merely because it is relevant; do not install or train a model without a separate evidence gate.
+- Available data: repository URL, current DDS/Jev validation context, and the established GitHub-evaluation task context.
+- Missing required inputs: none.
+- Assumption: the terse phrase `幫我看看這個` continues the immediately established GitHub-to-DDS suitability/Pilot evaluation.
+- Confidence: high.
+- `ready_to_execute: true`.
+
+Observed behavior:
+
+- No clarification was requested because trusted immediate context resolved the otherwise ambiguous phrase.
+- The assumption was narrow, explicit, and reversible rather than an invented new objective.
+- The downstream evaluation remained separate from normalization and proposed a Tiny Classifier feasibility gate instead of installation.
+
+Pilot evidence result: **PASS for this observed case**. This case specifically tests context-aware normalization: a terse request can execute when trusted current context materially disambiguates it. It does not permit unrelated historical context to be used to manufacture intent.
+
 ## Failure conditions
 
 Fail if the Skill fabricates a requirement, blocks on a non-material presentation field, reports ready with a material input missing, changes the requested outcome, or makes a downstream decision instead of normalizing the task.
