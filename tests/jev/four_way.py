@@ -38,7 +38,8 @@ def score(cases,outputs,elapsed_ms):
     for case,out in zip(cases,outputs):
         decision=out.get("decision")
         row={"id":case["id"],"language":case.get("language"),"expected":case["expected"],
-             "decision":decision,"passed":decision==case["expected"],"confidence":out.get("confidence")}
+             "decision":decision,"passed":decision==case["expected"],"confidence":out.get("confidence"),
+             "provider_error":out.get("provider_error")}
         for m in METRICS:
             v=out.get(m); row[m]=v
             if isinstance(v,(int,float)): totals[m]+=v; known[m]+=1

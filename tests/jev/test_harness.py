@@ -127,6 +127,13 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(metrics["critical_wrong_routes"],0)
         self.assertFalse(four_way.is_complete(metrics))
 
+    def test_score_preserves_provider_error_telemetry(self):
+        rows,_,_=four_way.score([case("T11")],[{
+            "decision":None,
+            "provider_error":"provider_request_failed",
+        }],0)
+        self.assertEqual(rows[0]["provider_error"],"provider_request_failed")
+
     def test_hybrid_hard_rule_cannot_be_overridden(self):
         calls=[]
         result=hybrid_adapter.decide(case("T11"),
