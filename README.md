@@ -106,6 +106,7 @@ Codex、Claude Code、Kimi、Hermes 與其他 Agent 都可參加，但必須遵�
 - `skills/plan-astro-photo-session/`
 - `skills/advise-taiwan-astro-trip/`（post-Sprint-5 Supporting/Advisory extension，Pilot-ready）
 - `skills/monitor-astro-opportunity/`（排程與 Email 交付 Supporting Skill）
+- `skills/task-spec-normalizer/`（需求正規化與 Preflight Supporting Skill；Pilot candidate）
 
 ## 建立新 Skill
 

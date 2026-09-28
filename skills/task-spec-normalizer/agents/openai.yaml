@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Specification Normalizer"
+  short_description: "Turn requests into grounded executable task contracts"
+  default_prompt: "Use $task-spec-normalizer to normalize this request into the smallest grounded DDS task contract and ask only for material missing inputs."
