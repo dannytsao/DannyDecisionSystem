@@ -41,6 +41,11 @@ is configured. `CHEAP_LLM_INPUT_USD_PER_MILLION` and
 `CHEAP_LLM_OUTPUT_USD_PER_MILLION` are optional provider-declared rates; cost
 remains null unless both rates and token usage are present.
 
+For GPT-5-family OpenAI models, use the Chat Completions URL shown above and
+the exact model identifier (for example `gpt-5-nano`). The adapter omits the
+unsupported sampling-temperature parameter and requests JSON mode; keep the
+model and endpoint in repository variables and the API key in the secret.
+
 Run the offline adapter contract with:
 
 ```bash
