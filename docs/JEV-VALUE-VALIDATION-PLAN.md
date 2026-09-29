@@ -58,31 +58,34 @@ GO only if decision quality is not worse than baseline, high-confidence accuracy
 
 HOLD if quality is good but savings are unclear. REJECT if high-confidence errors are unsafe, runtime cost is not reduced, or architecture complexity outweighs benefit.
 
-## Current measured shadow checkpoint (2026-09-28)
+## Current measured shadow checkpoint (2026-09-29)
 
-The latest PR run is [36398968862](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862)
-at branch commit `37ad329`. Its [Jev](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959408243),
-[Cheap LLM](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959607769),
-[Hybrid](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10958708796),
-and [offline](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959552273)
+The latest provider run is [36519519841](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841)
+at branch commit `a9f5910`. Its [Jev](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012565204),
+[Cheap LLM](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012328156),
+[Hybrid](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012163647),
+and [offline](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012013722)
 artifacts contain the current per-case rows. No expected labels or risk labels
 are sent to adapters.
 
-- Cheap LLM: 36/36 resolved, 94.44% accuracy, 0 critical wrong routes,
-  2,750 input tokens, and `$0.0078959` measured provider cost. Language
-  accuracy is EN 92.31%, mixed 90.91%, and zh-TW 100%.
+- Cheap LLM: 36/36 resolved, 91.67% accuracy, 0 critical wrong routes,
+  2,750 input tokens, and `$0.0069263` measured provider cost. Language
+  accuracy is EN 84.62%, mixed 90.91%, and zh-TW 100%.
 - Hybrid: 36/36 resolved, 97.22% accuracy, and 0 critical wrong routes.
   Language accuracy is EN 92.31%, mixed 100%, and zh-TW 100%. Reported
-  token/cost coverage is only 38.89% (1,048 tokens; `$0.0033464`), so this is
+  token/cost coverage is only 41.67% (1,129 tokens; `$0.00380045`), so this is
   not complete end-to-end Hybrid cost. The current scorer also does not expose
   Jev-versus-fallback chain-call counts.
-- Direct Jev: 94.44% direct accuracy and 100% accuracy on 21 high-confidence
-  cases. Fifteen low-confidence cases remain unresolved because no callable DDS
-  Runtime fallback exists; safe accuracy is therefore 58.33%.
+- Direct Jev: 94.44% direct accuracy and 100% accuracy on 22 high-confidence
+  cases. Fourteen low-confidence cases remain unresolved because no callable DDS
+  Runtime fallback exists; safe accuracy is therefore 61.11%.
 - DDS baseline: only the explicit hard-rule diagnostic is executable; it covers
   2/12 golden cases (16.7%). Full DDS accuracy remains unavailable.
 
-This checkpoint is **HOLD** for production adoption. The live Jev job remains
+This checkpoint is **HOLD** for production adoption. A prior completed run on
+the same dataset produced Cheap LLM 94.44% and Hybrid 91.67%; the latest run
+produced 91.67% and 97.22%. This run-to-run variance is itself evidence that a
+single run cannot establish a winner. The live Jev job remains
 red because its safe fallback acceptance gate correctly exposes unresolved
 cases; that failure is evidence of the missing Runtime fallback, not a reason
 to lower the confidence threshold. The complete per-use-case recommendation is

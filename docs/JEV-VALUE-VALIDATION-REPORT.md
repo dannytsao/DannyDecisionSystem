@@ -6,9 +6,9 @@ routing is unchanged.
 **Verified on:** 2026-09-29 (Asia/Taipei)
 
 **Source of truth:** GitHub repository state at [`jev-value-validation` /
-`37ad329`](https://github.com/dannytsao/DannyDecisionSystem/tree/jev-value-validation),
+`a9f5910`](https://github.com/dannytsao/DannyDecisionSystem/tree/jev-value-validation),
 PR [#4](https://github.com/dannytsao/DannyDecisionSystem/pull/4), and the
-latest PR Actions run [#36398968862](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862).
+latest provider Actions run [#36519519841](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841).
 
 PR #4 is still Draft. `main` is still `6b409586`. No production DDS files
 were changed.
@@ -39,32 +39,32 @@ thresholds, or fresh-information policy. Those remain DDS authority rules.
 | --- | --- | --- |
 | Offline/unit/regression | Success in the latest run's `offline-validation` job | Contract and regression evidence only; fixtures are not provider evidence |
 | Live Jev golden | 12/12 direct and safe; 100%; 0 critical wrong routes | Small anti-control/contract sample, not a historical value result |
-| Live Jev historical | 36 cases; direct 34/36 (94.44%); 21/21 high-confidence (100%); safe 21/36 (58.33%) | 15 low-confidence cases intentionally abstained because DDS fallback is unavailable |
-| Cheap LLM historical | 36/36 resolved; 34/36 (94.44%); 0 critical wrong routes | Complete measured provider arm |
+| Live Jev historical | 36 cases; direct 34/36 (94.44%); 22/22 high-confidence (100%); safe 22/36 (61.11%) | 14 low-confidence cases intentionally abstained because DDS fallback is unavailable |
+| Cheap LLM historical | 36/36 resolved; 33/36 (91.67%); 0 critical wrong routes | Complete measured provider arm, with run-to-run output variance |
 | Hybrid historical | 36/36 resolved; 35/36 (97.22%); 0 critical wrong routes | Best measured quality, with partial chain telemetry |
 | DDS baseline | Golden hard-rule adapter resolved 2/12 (16.7%); resolved accuracy 2/2 | Partial policy diagnostic, not a full DDS Runtime baseline |
 
-Artifacts are independently downloadable from the latest run: [Jev](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959408243),
-[Cheap LLM](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959607769),
-[Hybrid](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10958708796),
-and [offline results](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959552273).
+Artifacts are independently downloadable from the latest run: [Jev](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012565204),
+[Cheap LLM](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012328156),
+[Hybrid](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012163647),
+and [offline results](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36519519841/artifacts/11012013722).
 
 ## Four-arm comparison
 
 | Arm | Coverage / quality | Language slices | Latency | Calls / steps | Tokens / cost | Fallback |
 | --- | --- | --- | --- | --- | --- | --- |
 | DDS baseline | **Unavailable as a whole-arm measure.** Hard-rule diagnostic: 2/12 golden coverage, 100% on those 2 | No meaningful slice | 0.0014 ms mean over resolved diagnostic rows | 0 LLM; 2 policy steps | 0 measured | Abstains outside explicit facts |
-| GPT-5 nano / Cheap LLM | 36/36; 94.44%; 0 critical wrong routes | EN 92.31%, mixed 90.91%, zh-TW 100% | 4,664.6 ms mean; 168.0 s wall | 36 LLM, 0 retries, 36 pipeline steps | 2,750 input tokens; `$0.0078959` measured cost, 100% coverage | None in the measured successful run |
-| Jev direct | Historical 34/36 (94.44%); high-confidence 21/21 (100%); 0 direct critical wrong routes | Direct: EN 92.31%, mixed 90.91%, zh-TW 100% | 186.1 ms mean per case (artifact rows) | Provider call telemetry not summarized by the benchmark | Token and cost telemetry unavailable | 15/36 low-confidence fallbacks; all 15 unresolved |
-| Hybrid | 36/36; 35/36 (97.22%); 0 critical wrong routes | EN 92.31%, mixed 100%, zh-TW 100% | 2,753.8 ms mean; 99.2 s wall | Artifact reports 36 terminal `llm_calls`; it does not expose Jev-vs-fallback chain calls | 1,048 tokens and `$0.0033464` reported, only 38.9% coverage; not an end-to-end cost | 14 rows carry Cheap LLM token/cost fields; this is inferred from rows, not a first-class counter |
+| GPT-5 nano / Cheap LLM | 36/36; 91.67%; 0 critical wrong routes | EN 84.62%, mixed 90.91%, zh-TW 100% | 4,275.0 ms mean; 154.0 s wall | 36 LLM, 0 retries, 36 pipeline steps | 2,750 input tokens; `$0.0069263` measured cost, 100% coverage | None in the measured successful run |
+| Jev direct | Historical 34/36 (94.44%); high-confidence 22/22 (100%); 0 direct critical wrong routes | Direct: EN 92.31%, mixed 90.91%, zh-TW 100% | 170.8 ms mean per case (artifact rows) | Provider call telemetry not summarized by the benchmark | Token and cost telemetry unavailable | 14/36 low-confidence fallbacks; all 14 unresolved |
+| Hybrid | 36/36; 35/36 (97.22%); 0 critical wrong routes | EN 92.31%, mixed 100%, zh-TW 100% | 2,796.1 ms mean; 100.7 s wall | Artifact reports 36 terminal `llm_calls`; it does not expose Jev-vs-fallback chain calls | 1,129 tokens and `$0.00380045` reported, only 41.7% coverage; not an end-to-end cost | 15 rows carry Cheap LLM token/cost fields; this is inferred from rows, not a first-class counter |
 
 The Hybrid `llm_calls_total=36` value must not be read as “36 calls for the
 whole chain.” The adapter invokes Jev first and may then invoke Cheap LLM;
-the current four-way scorer preserves only the final adapter row. The 14-row
+the current four-way scorer preserves only the final adapter row. The 15-row
 fallback count above is therefore an explicitly **inferred** observation from
 the token/cost-bearing rows, not a complete provider-call measurement.
 
-Likewise, `$0.0033464` is a partial measured field, not complete Hybrid task
+Likewise, `$0.00380045` is a partial measured field, not complete Hybrid task
 cost. Jev does not report token/cost usage in this run, so no missing values are
 filled or extrapolated.
 
@@ -85,8 +85,12 @@ filled or extrapolated.
   explicit critical hard-rule control.
 - The two direct Jev errors are H21 and H33, both low-confidence false
   `FINISH` decisions. No high-confidence direct error was observed.
-- Cheap LLM errors are H03 (`FAST_PATH` → `DEEP_REASONING`) and H27
+- In the latest run, Cheap LLM errors are H03 (`FAST_PATH` →
+  `DEEP_REASONING`), H05 (`DO_NOT_INSTALL` → `SANDBOX_FIRST`), and H27
   (`SKILL_FIRST` → `BUILD_APP`). Hybrid retains H03 as its only wrong route.
+- A prior completed run on the same 36 cases produced Cheap LLM 94.44% and
+  Hybrid 91.67%; the latest run produced 91.67% and 97.22%, respectively.
+  This run-to-run variance is why no single provider is declared the winner.
 
 ## By-use-case recommendation
 
