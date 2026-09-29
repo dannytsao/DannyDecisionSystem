@@ -1,6 +1,8 @@
 # DDS × Jev Value Validation Plan
 
-Status: Measured shadow checkpoint; production routing unchanged.
+Status: Final evidence consolidation; production routing unchanged. See the
+[validation report](JEV-VALUE-VALIDATION-REPORT.md) for the current GitHub
+artifact-backed decision.
 
 ## Decision question
 
@@ -56,31 +58,35 @@ GO only if decision quality is not worse than baseline, high-confidence accuracy
 
 HOLD if quality is good but savings are unclear. REJECT if high-confidence errors are unsafe, runtime cost is not reduced, or architecture complexity outweighs benefit.
 
-## Measured shadow checkpoint (2026-09-28)
+## Current measured shadow checkpoint (2026-09-28)
 
-The validation branch measured the executable provider adapters on historical
-cases H01-H36 in GitHub Actions [run 36398453340](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398453340).
-The uploaded [Cheap LLM artifact](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398453340/artifacts/10959462527)
-and [Hybrid artifact](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398453340/artifacts/10959571565)
-contain the per-case rows; no expected labels are sent to adapters.
+The latest PR run is [36398968862](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862)
+at branch commit `37ad329`. Its [Jev](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959408243),
+[Cheap LLM](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959607769),
+[Hybrid](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10958708796),
+and [offline](https://github.com/dannytsao/DannyDecisionSystem/actions/runs/36398968862/artifacts/10959552273)
+artifacts contain the current per-case rows. No expected labels or risk labels
+are sent to adapters.
 
 - Cheap LLM: 36/36 resolved, 94.44% accuracy, 0 critical wrong routes,
-  2,750 measured input tokens, and $0.0071007 measured provider cost using
-  the configured published rates ($0.05 input / $0.40 output per million).
-  Language accuracy was EN 92.31%, zh-TW 100%, and mixed 90.91%.
-- Hybrid: 36/36 resolved, 91.67% accuracy, and 0 critical wrong routes.
-  Language accuracy was EN 84.62%, zh-TW 100%, and mixed 90.91%.
-  Jev-side token and cost fields remain null where the SDK does not report
-  them, so Hybrid cost coverage is 38.89% rather than an invented total.
+  2,750 input tokens, and `$0.0078959` measured provider cost. Language
+  accuracy is EN 92.31%, mixed 90.91%, and zh-TW 100%.
+- Hybrid: 36/36 resolved, 97.22% accuracy, and 0 critical wrong routes.
+  Language accuracy is EN 92.31%, mixed 100%, and zh-TW 100%. Reported
+  token/cost coverage is only 38.89% (1,048 tokens; `$0.0033464`), so this is
+  not complete end-to-end Hybrid cost. The current scorer also does not expose
+  Jev-versus-fallback chain-call counts.
 - Direct Jev: 94.44% direct accuracy and 100% accuracy on 21 high-confidence
-  cases, but the current repository has no callable DDS Runtime fallback;
-  15 low-confidence cases therefore remain unresolved and the safe accuracy
-  is 58.33%.
+  cases. Fifteen low-confidence cases remain unresolved because no callable DDS
+  Runtime fallback exists; safe accuracy is therefore 58.33%.
+- DDS baseline: only the explicit hard-rule diagnostic is executable; it covers
+  2/12 golden cases (16.7%). Full DDS accuracy remains unavailable.
 
-This checkpoint is **HOLD**: provider execution and language slices are real,
-but the missing full DDS baseline and unresolved direct Jev fallback prevent a
-GO comparison. The live Jev job remains intentionally red to keep that gap
-visible; this is not treated as Cheap LLM or Hybrid provider evidence.
+This checkpoint is **HOLD** for production adoption. The live Jev job remains
+red because its safe fallback acceptance gate correctly exposes unresolved
+cases; that failure is evidence of the missing Runtime fallback, not a reason
+to lower the confidence threshold. The complete per-use-case recommendation is
+in [JEV-VALUE-VALIDATION-REPORT.md](JEV-VALUE-VALIDATION-REPORT.md).
 
 ## DDS boundary
 

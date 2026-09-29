@@ -1,6 +1,8 @@
 # Jev Value Validation for DDS
 
-Status: Shadow-mode benchmark scaffold. It does not change production DDS routing.
+Status: Shadow-mode validation harness. It does not change production DDS
+routing. The current artifact-backed decision and per-use-case matrix are in
+[`docs/JEV-VALUE-VALIDATION-REPORT.md`](../../docs/JEV-VALUE-VALIDATION-REPORT.md).
 
 ## Baseline boundary
 
