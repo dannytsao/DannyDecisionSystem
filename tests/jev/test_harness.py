@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+import json, sys, unittest
+from pathlib import Path
+from urllib.error import HTTPError
+
+ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT))
+import benchmark
+import four_way
+import dds_policy_adapter
+import hybrid_adapter
+import cheap_llm_adapter
+import jev_adapter
+
+def case(case_id):
+    return next(c for c in benchmark.load_cases() if c["id"] == case_id)
+
+class HarnessTests(unittest.TestCase):
+    def test_golden_schema(self):
+        cases=benchmark.load_cases()
+        self.assertGreaterEqual(len(cases),10)
+        for c in cases:
+            self.assertIn(c["expected"],c["options"])
+            self.assertIn("risk",c)
+
+    def test_fixture_acceptance(self):
+        rows,s,_=benchmark.run_cases("fixture")
+        self.assertGreaterEqual(s["direct_accuracy"],.90)
+        self.assertGreaterEqual(s["safe_accuracy"],.90)
+        self.assertEqual(s["direct_critical_wrong_routes"],0)
+        self.assertEqual(s["safe_critical_wrong_routes"],0)
+        self.assertEqual(s["fallback_count"],0)
+
+    def test_timeout_fallback(self):
+        c=case("T01")
+        r=benchmark.evaluate_case(c,lambda _: (_ for _ in ()).throw(TimeoutError("timeout")))
+        self.assertFalse(r["direct_passed"]); self.assertFalse(r["safe_passed"])
+        self.assertIsNone(r["safe_decision"])
+        self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"provider_error")
+
+    def test_unresolved_provider_is_not_a_critical_wrong_route(self):
+        c=case("T11")
+        r=benchmark.evaluate_case(c,lambda _: (_ for _ in ()).throw(TimeoutError("timeout")))
+        summary=benchmark.summarize([r],"jev")
+        self.assertEqual(summary["direct_critical_wrong_routes"],0)
+        self.assertEqual(summary["safe_critical_wrong_routes"],0)
+
+    def test_invalid_response_fallback(self):
+        c=case("T01")
+        r=benchmark.evaluate_case(c,lambda _: {"decision":"BOGUS","confidence":.99})
+        self.assertFalse(r["direct_passed"]); self.assertFalse(r["safe_passed"])
+        self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"invalid_decision")
+
+    def test_low_confidence_fallback(self):
+        c=case("T01")
+        r=benchmark.evaluate_case(c,lambda _: {"decision":c["expected"],"confidence":.5})
+        self.assertTrue(r["direct_passed"]); self.assertFalse(r["safe_passed"])
+        self.assertTrue(r["fallback_used"]); self.assertEqual(r["fallback_reason"],"low_or_missing_confidence")
+
+    # S04/S05: deterministic DDS authority/evidence policy must not be delegated.
+    def test_s04_hard_rule_authority_preserved(self):
+        c=case("T11")
+        self.assertEqual(c.get("engine_expected"),"HARD_RULE")
+        self.assertEqual(c["expected"],"HUMAN_APPROVAL")
+
+    def test_s05_fresh_evidence_policy_preserved(self):
+        c=case("T12")
+        self.assertEqual(c.get("engine_expected"),"HARD_RULE")
+        self.assertEqual(c["expected"],"SEARCH")
+
+    # S06-S09: bounded routing gates must preserve expected outcomes.
+    def test_s06_false_finish_guard(self):
+        c=case("T05"); self.assertEqual(c["expected"],"CONTINUE")
+        self.assertTrue(benchmark.evaluate_case(c,benchmark.fixture_decide)["safe_passed"])
+
+    def test_s07_wasteful_continue_guard(self):
+        c=case("T06"); self.assertEqual(c["expected"],"FINISH")
+        self.assertTrue(benchmark.evaluate_case(c,benchmark.fixture_decide)["safe_passed"])
+
+    def test_s08_fast_path_routing(self):
+        c=case("T07"); self.assertEqual(c["expected"],"FAST_PATH")
+        self.assertTrue(benchmark.evaluate_case(c,benchmark.fixture_decide)["safe_passed"])
+
+    def test_s09_deep_reasoning_routing(self):
+        c=case("T08"); self.assertEqual(c["expected"],"DEEP_REASONING")
+        self.assertTrue(benchmark.evaluate_case(c,benchmark.fixture_decide)["safe_passed"])
+
+    # S10: metrics required to compare provider quality vs safe DDS behavior.
+    def test_s10_total_task_metrics_schema(self):
+        _,s,_=benchmark.run_cases("fixture")
+        required={"direct_accuracy","safe_accuracy","high_confidence_direct_accuracy",
+                  "direct_critical_wrong_routes","safe_critical_wrong_routes",
+                  "fallback_count","fallback_rate","provider_errors"}
+        self.assertTrue(required.issubset(s))
+
+    def test_historical_dataset_schema(self):
+        data=json.loads((ROOT/"historical.json").read_text())
+        self.assertGreaterEqual(len(data),30)
+        languages=set()
+        for c in data:
+            self.assertIn(c["expected"],c["options"])
+            self.assertIn(c["language"],{"en","zh-TW","mixed"})
+            self.assertIn("source_type",c)
+            languages.add(c["language"])
+        self.assertEqual(languages,{"en","zh-TW","mixed"})
+
+    def test_policy_adapter_abstains_without_explicit_facts(self):
+        self.assertIsNone(dds_policy_adapter.decide(case("T02"))["decision"])
+        for case_id,answer in (("T11","HUMAN_APPROVAL"),("T12","SEARCH")):
+            c=case(case_id)
+            self.assertEqual(dds_policy_adapter.decide(c)["decision"],answer)
+            c={**c,"expected":"wrong label"}
+            self.assertEqual(dds_policy_adapter.decide(c)["decision"],answer)
+
+    def test_adapter_never_receives_expected_or_risk(self):
+        import sys
+        cases=[case("T11")]
+        command=f"{sys.executable} -c 'import sys,json; d=json.loads(sys.stdin.readline()); assert \"expected\" not in d and \"risk\" not in d; print(json.dumps({{\"decision\":None}}))'"
+        outputs,_=four_way.run_command(command,cases)
+        self.assertIsNone(outputs[0]["decision"])
+        _,metrics,_=four_way.score(cases,outputs,0)
+        self.assertIsNone(metrics["accuracy"])
+        self.assertEqual(metrics["decision_coverage"],0)
+
+    def test_unresolved_adapter_is_not_a_wrong_route(self):
+        c=case("T11")
+        _,metrics,_=four_way.score([c],[{"decision":None}],0)
+        self.assertEqual(metrics["critical_wrong_routes"],0)
+        self.assertFalse(four_way.is_complete(metrics))
+
+    def test_score_preserves_provider_error_telemetry(self):
+        rows,_,_=four_way.score([case("T11")],[{
+            "decision":None,
+            "provider_error":"provider_request_failed",
+        }],0)
+        self.assertEqual(rows[0]["provider_error"],"provider_request_failed")
+
+    def test_hybrid_hard_rule_cannot_be_overridden(self):
+        calls=[]
+        result=hybrid_adapter.decide(case("T11"),
+            jev=lambda c: calls.append("jev") or {"decision":"EXECUTE","confidence":1},
+            llm=lambda c: calls.append("llm") or {"decision":"EXECUTE"})
+        self.assertEqual(result["decision"],"HUMAN_APPROVAL")
+        self.assertEqual(result["route"],"hard_rule")
+        self.assertEqual(calls,[])
+
+    def test_hybrid_low_confidence_falls_back(self):
+        c=case("T05")
+        result=hybrid_adapter.decide(c,
+            jev=lambda _: {"decision":"FINISH","confidence":.4},
+            llm=lambda _: {"decision":"CONTINUE","cost_usd":None})
+        self.assertEqual(result["decision"],"CONTINUE")
+        self.assertEqual(result["route"],"llm_fallback")
+        self.assertIsNone(hybrid_adapter.decide(c)["decision"])
+
+    def test_cheap_llm_request_excludes_scoring_metadata(self):
+        c=case("T11")
+        request=cheap_llm_adapter.build_request(c)
+        self.assertEqual(set(request),{"id","gate","state","options","policy_facts"})
+        self.assertNotIn("expected",request)
+        self.assertNotIn("risk",request)
+
+    def test_cheap_llm_unconfigured_provider_abstains(self):
+        c=case("T01")
+        result=cheap_llm_adapter.unconfigured_result(c)
+        self.assertIsNone(result["decision"])
+        self.assertEqual(result["provider"],"unconfigured")
+        self.assertIsNone(result["cost_usd"])
+
+    def test_cheap_llm_usage_cost_requires_declared_rates(self):
+        usage={"prompt_tokens":1000,"completion_tokens":500}
+        self.assertIsNone(cheap_llm_adapter.cost_from_usage(usage,None,None))
+        self.assertEqual(
+            cheap_llm_adapter.cost_from_usage(usage,1.0,2.0),
+            0.002,
+        )
+
+    def test_cheap_llm_reports_http_status_without_response_body(self):
+        class FailingProvider:
+            name="openai-compatible"
+            def complete(self, request):
+                del request
+                raise HTTPError("https://api.example.test", 400, "bad request", {}, None)
+        result=cheap_llm_adapter.decide(case("T01"), FailingProvider())
+        self.assertEqual(result["provider_error"],"http_400")
+
+    def test_cheap_llm_request_avoids_unsupported_sampling_parameter(self):
+        captured={}
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def read(self):
+                return b'{"choices":[{"message":{"content":"{\\"decision\\":\\"CONTINUE\\"}"}}]}'
+        def fake_urlopen(request, timeout):
+            del timeout
+            captured.update(json.loads(request.data.decode("utf-8")))
+            return Response()
+        original=cheap_llm_adapter.urllib_request.urlopen
+        cheap_llm_adapter.urllib_request.urlopen=fake_urlopen
+        try:
+            cheap_llm_adapter.OpenAICompatibleProvider(
+                "https://api.example.test", "key", "gpt-5-nano", 1
+            ).complete(case("T01"))
+        finally:
+            cheap_llm_adapter.urllib_request.urlopen=original
+        self.assertNotIn("temperature", captured)
+
+    def test_jev_request_excludes_scoring_metadata(self):
+        c=case("T11")
+        request=jev_adapter.build_request(c)
+        self.assertEqual(set(request),{"id","gate","state","options","policy_facts"})
+        self.assertNotIn("expected",request)
+        self.assertNotIn("risk",request)
+
+if __name__=="__main__":
+    unittest.main()

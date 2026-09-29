@@ -1,0 +1,12 @@
+[
+{"id":"S01","name":"provider timeout fallback","expected":"FALLBACK_OK","risk":"high"},
+{"id":"S02","name":"invalid response fallback","expected":"FALLBACK_OK","risk":"high"},
+{"id":"S03","name":"low confidence abstain","expected":"ABSTAIN","risk":"high"},
+{"id":"S04","name":"hard-rule authority preserved","expected":"HUMAN_APPROVAL","risk":"critical"},
+{"id":"S05","name":"fresh evidence policy preserved","expected":"SEARCH","risk":"medium"},
+{"id":"S06","name":"false FINISH guard","expected":"CONTINUE","risk":"high"},
+{"id":"S07","name":"wasteful CONTINUE guard","expected":"FINISH","risk":"medium"},
+{"id":"S08","name":"fast path routing","expected":"FAST_PATH","risk":"low"},
+{"id":"S09","name":"deep reasoning routing","expected":"DEEP_REASONING","risk":"medium"},
+{"id":"S10","name":"total task metrics","expected":"METRICS_COMPLETE","risk":"medium"}
+]
