@@ -3,15 +3,15 @@ name: Jev Value Validation
 on:
   push:
     branches: [jev-value-validation]
+    # Report/plan edits consume existing artifacts; live providers run only
+    # when the harness or workflow changes, or when manually dispatched.
     paths:
       - "tests/jev/**"
-      - "docs/JEV-VALUE-VALIDATION-PLAN.md"
       - ".github/workflows/jev-validation.yml"
   pull_request:
     branches: [main]
     paths:
       - "tests/jev/**"
-      - "docs/JEV-VALUE-VALIDATION-PLAN.md"
       - ".github/workflows/jev-validation.yml"
   workflow_dispatch:
 
