@@ -47,7 +47,7 @@ jobs:
           if-no-files-found: warn
 
   live-jev:
-    if: ${{ vars.JEV_LIVE_ENABLED == 'true' }}
+    if: ${{ github.event_name != 'pull_request' && vars.JEV_LIVE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     needs: offline-validation
     env:
@@ -68,7 +68,7 @@ jobs:
           if-no-files-found: warn
 
   live-cheap-llm:
-    if: ${{ vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
+    if: ${{ github.event_name != 'pull_request' && vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     needs: offline-validation
     env:
@@ -93,7 +93,7 @@ jobs:
           if-no-files-found: warn
 
   live-hybrid:
-    if: ${{ vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
+    if: ${{ github.event_name != 'pull_request' && vars.JEV_LIVE_ENABLED == 'true' && vars.CHEAP_LLM_LIVE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     needs: offline-validation
     env:
